@@ -1,0 +1,7 @@
+UserName,AccessType,RoleName,DatabaseName,TableName,ColumnName,AccessRight,AccessRightDesc,GrantAuthority,GrantorName,AllnessFlag,CreatorName,CreateTimeStamp
+user3,Member,data_reader                   ,db1,t1,All,R   ,RETRIEVE/SELECT,,DBC,,,2021-02-14 14:27:41
+user3,Member,data_reader                   ,db1,t2,All,R   ,RETRIEVE/SELECT,,DBC,,,2021-02-14 14:27:41
+user3,Member,data_reader                   ,db2,All,All,R   ,RETRIEVE/SELECT,,DBC,,,2021-02-14 14:27:29
+user3,Member,data_reader                   ,db3,All,All,R   ,RETRIEVE/SELECT,,DBC,,,2021-02-14 14:27:29
+user3,Member,data_reader                   ,db4,t1,All,R   ,RETRIEVE/SELECT,,DBC,,,2021-02-14 14:27:41
+user3,Member,data_reader                   ,db4,t2,All,R   ,RETRIEVE/SELECT,,DBC,,,2021-02-14 14:27:41

@@ -1,0 +1,5 @@
+Teradata_object,BigQuery_object
+db1.t1,t1
+db1.t2,t2_renamed
+db4.t1,t1
+db4.t2,t2_renamed

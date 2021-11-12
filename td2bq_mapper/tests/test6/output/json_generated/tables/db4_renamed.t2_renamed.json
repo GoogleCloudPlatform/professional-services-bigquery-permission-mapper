@@ -1,0 +1,6 @@
+{
+    "members": [
+        "group:data_reader@epishova.joonix.net"
+    ],
+    "role": "projects/acl-mapper-test/roles/td2bq_mapper_bqcustom1"
+}

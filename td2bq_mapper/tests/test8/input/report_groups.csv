@@ -1,0 +1,4 @@
+Teradata_role,GCP_user_group,Rename_GCP_user_group
+data_reader,group1@{%domain.com%},data_reader@epishova.joonix.net
+data_editor,group2@{%domain.com%},data_editor@epishova.joonix.net
+data_reader_2,group3@{%domain.com%},data_reader_2@epishova.joonix.net

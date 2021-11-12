@@ -1,0 +1,9 @@
+**/__pycache__
+**/.vscode/
+**/terraform/
+**/tf_backup
+td2bq_mapper/tests/temp_dir/*.*
+terraform_generated/*.*
+json_generated/*.*
+logs/
+.DS_Store

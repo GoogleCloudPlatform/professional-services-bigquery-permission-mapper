@@ -1,0 +1,32 @@
+UserName,AccessType,RoleName,DatabaseName,TableName,ColumnName,AccessRight,AccessRightDesc,GrantAuthority,GrantorName,AllnessFlag,CreatorName,CreateTimeStamp
+user1,Member,role1,tpch,All,All,R,RETRIEVE/SELECT,,DBC,,,2020-09-22 17:29:54
+user1,User,,user1,All,All,CA,CREATE AUTHORIZATION,N,DBC,N,DBC,2020-09-22 17:28:04
+user1,User,,user1,All,All,CG,CREATE TRIGGER,N,DBC,N,DBC,2020-09-22 17:28:04
+user1,User,,user1,All,All,CM,CREATE MACRO,N,DBC,N,DBC,2020-09-22 17:28:04
+user1,User,,user1,All,All,CP,CHECKPOINT,N,DBC,N,DBC,2020-09-22 17:28:04
+user1,User,,user1,All,All,CT,CREATE TABLE,N,DBC,N,DBC,2020-09-22 17:28:04
+user1,User,,user1,All,All,CV,CREATE VIEW,N,DBC,N,DBC,2020-09-22 17:28:04
+user1,Member,role_3,db1,t2,All,D,DELETE,,DBC,,,2021-01-26 13:13:34
+user1,Member,role_3,db1,All,All,R,RETRIEVE/SELECT,,DBC,,,2021-01-26 13:10:53
+user1,Member,role_3,db1,t2,All,U,UPDATE,,DBC,,,2021-01-26 13:13:34
+user1,Member,role_3,db1,t2,All,I,INSERT,,DBC,,,2021-01-26 13:13:34
+user1,Member,role_3,db2,t3,All,R,RETRIEVE/SELECT,,DBC,,,2021-01-26 13:17:29
+user1,Member,role_3,db1,t2,All,R,RETRIEVE/SELECT,,DBC,,,2021-01-26 13:13:02
+user2,Member,role_3,db1,t2,All,D,DELETE,,DBC,,,2021-01-26 13:13:34
+user2,Member,role_3,db1,t2,All,R,RETRIEVE/SELECT,,DBC,,,2021-01-26 13:13:02
+user2,Member,role_3,db1,All,All,R,RETRIEVE/SELECT,,DBC,,,2021-01-26 13:10:53
+user2,Member,role_3,db1,t2,All,U,UPDATE,,DBC,,,2021-01-26 13:13:34
+user2,Member,role_3,db1,t2,All,I,INSERT,,DBC,,,2021-01-26 13:13:34
+user2,Member,role_3,db2,t3,All,R,RETRIEVE/SELECT,,DBC,,,2021-01-26 13:17:29
+user2,Member,role_4,db2,All,All,R,RETRIEVE/SELECT,,DBC,,,2021-01-26 13:18:33
+user2,Member,role_4,db2,t3,All,I,INSERT,,DBC,,,2021-01-26 13:18:35
+user2,Member,role_4,db2,t3,All,R,RETRIEVE/SELECT,,DBC,,,2021-01-26 13:18:35
+user2,Member,role_4,db1,v1,All,R,RETRIEVE/SELECT,,DBC,,,2021-01-26 13:21:09
+user2,Member,role_4,db2,t3,All,D,DELETE,,DBC,,,2021-01-26 13:18:35
+user2,Member,role_4,db2,t3,All,U,UPDATE,,DBC,,,2021-01-26 13:18:35
+user3,Member,role_4,db2,t3,All,D,DELETE,,DBC,,,2021-01-26 13:18:35
+user3,Member,role_4,db2,All,All,R,RETRIEVE/SELECT,,DBC,,,2021-01-26 13:18:33
+user3,Member,role_4,db2,t3,All,R,RETRIEVE/SELECT,,DBC,,,2021-01-26 13:18:35
+user3,Member,role_4,db2,t3,All,I,INSERT,,DBC,,,2021-01-26 13:18:35
+user3,Member,role_4,db1,v1,All,R,RETRIEVE/SELECT,,DBC,,,2021-01-26 13:21:09
+user3,Member,role_4,db2,t3,All,U,UPDATE,,DBC,,,2021-01-26 13:18:35

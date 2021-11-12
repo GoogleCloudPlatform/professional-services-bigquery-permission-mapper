@@ -1,0 +1,21 @@
+{
+    "title": "td2bq_mapper_bqcustom2",
+    "includedPermissions": [
+        "bigquery.tables.export",
+        "bigquery.models.updateMetadata",
+        "bigquery.tables.get",
+        "bigquery.models.delete",
+        "bigquery.models.list",
+        "bigquery.routines.list",
+        "bigquery.tables.getData",
+        "bigquery.models.getMetadata",
+        "bigquery.models.getData",
+        "bigquery.models.export",
+        "bigquery.tables.updateData",
+        "bigquery.models.updateData",
+        "bigquery.models.create",
+        "bigquery.tables.list",
+        "bigquery.routines.get"
+    ],
+    "stage": "ALPHA"
+}
