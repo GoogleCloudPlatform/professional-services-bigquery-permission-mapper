@@ -132,7 +132,9 @@ def make_dirs(path: str, overwrite: bool, files=None) -> bool:
     """
     abs_path = os.path.abspath(path)
     if not overwrite and os.path.isdir(abs_path) and files:
-        old_files = files.intersection(os.listdir(abs_path))
+        old_files = files.intersection(
+            {os.path.join(abs_path, f) for f in os.listdir(abs_path)}
+        )
         if old_files:
             logger.error(
                 "Directory %s contains outputs from the previouse "
