@@ -13,46 +13,50 @@
 # limitations under the License.
 
 import logging
-from typing import Union
+import os
+from td2bq_mapper import td2bq_util
 
-from .td2bq_util import get_root_dir, write_json_file
+# Terraform file name for IAM user groups
+GROUP_FILE = "iam_groups.tf.json"
+
+# Terraform file name for BigQuery custom roles
+CUSTOM_ROLES_FILE = "iam_custom_roles.tf.json"
+
+# Terraform file name for BigQuery dataset IAM bindings
+DATASET_FILE = "iam_datasets_roles_binding.tf.json"
+
+# Terraform file name for BigQuery table IAM bindings
+TABLE_FILE = "iam_tables_roles_binding.tf.json"
 
 logger = logging.getLogger("td2bq")
 
 
 class Td2BqUsersMap:
-    """
-    Td2BqUserMapper class.  used to instantiate and store
-    td2bq_permissions_users_map
-    """
+    """Class to create Terraforms with BigQuery IAM bindings and custom roles."""
 
-    def __init__(self) -> None:
-        """
-        Td2BqUsersMapper constructor. Initialize class variables
-        Args: None
+    def __init__(self, change_folder: str) -> None:
+        """Td2BqUsersMap constructor. Initialize class variables.
+
+        Args:
+          change_folder: directory to create change files
 
         Returns:
-            None
+          None
         """
-        # defaults
-        self.td2bq_users_map = None
-        # self.map3_generated_file = get_root_dir() + "/data/td2bq_map3_generated_map.dict"
-
         # terraform files
-        self.generated_tf_folder = get_root_dir() + "/../terraform_generated/"
-        self.generated_tf_groups_file = self.generated_tf_folder + "iam_groups.tf.json"
-        self.generated_tf_custom_roles_file = (
-            self.generated_tf_folder + "iam_custom_roles.tf.json"
-        )
-        self.generated_tf_invalid_custom_roles_file = (
-            self.generated_tf_folder + "iam_invalid_custom_roles.tf.json"
-        )
-        self.generated_tf_datasets_file = (
-            self.generated_tf_folder + "iam_datasets_roles_binding.tf.json"
-        )
-        self.generated_tf_tables_file = (
-            self.generated_tf_folder + "iam_tables_roles_binding.tf.json"
-        )
+        if os.path.isdir(change_folder):
+            self.tf_folder = os.path.join(change_folder, "terraform_generated/")
+            self.generated_tf_groups_file = os.path.join(self.tf_folder, GROUP_FILE)
+            self.generated_tf_custom_roles_file = os.path.join(
+                self.tf_folder, CUSTOM_ROLES_FILE
+            )
+            self.generated_tf_datasets_file = os.path.join(self.tf_folder, DATASET_FILE)
+            self.generated_tf_tables_file = os.path.join(self.tf_folder, TABLE_FILE)
+            self.generated_tf_invalid_custom_roles_file = os.path.join(
+                self.tf_folder, "iam_invalid_custom_roles.tf.json"
+            )
+        else:
+            raise ValueError(f"Path {change_folder} is not an existing directory.")
 
     def keys_changed(self, original: dict, updated: dict) -> bool:
         """
@@ -118,17 +122,16 @@ class Td2BqUsersMap:
         }
         return mem_dict
 
-    def get_groups_from_bq_role_to_mappings(
-        self, bq_role_to_mappings: dict
-    ) -> Union[dict, None]:
-        """
-        From previous step's output dictionary file extract the groups and users
+    def get_groups_from_bq_role_to_mappings(self, bq_role_to_mappings: dict) -> dict:
+        """Extract the groups and users from a mapping.
+
+        From previous step's output dictionary file extract the groups and users.
+
         Args:
-            bq_role_to_mappings: previous step's output dictionary
+          bq_role_to_mappings: previous step's output dictionary
 
         Returns:
-            groups_map(dict): dictionary with groups/users map on success.
-                              None on failure.
+          groups_map(dict): dictionary with groups/users map on success.
         """
         group_map = {}
         for custom_role, custom_role_info in bq_role_to_mappings.items():
@@ -145,16 +148,16 @@ class Td2BqUsersMap:
     def gen_tf_iam_groups(
         self, bq_role_to_mappings: dict, cid: str, project_id: str
     ) -> bool:
-        """
-        Generate Terraform script that will create Google groups
+        """Generate Terraform script that will create Google groups.
+
         Args:
-            bq_role_to_mappings(dict): bq_role_to_mappings mapping data
-              structure
-            cid(str): The customer ID to use i.e. C02dfkjhd
-            project_id(str): Project ID
+          bq_role_to_mappings(dict): bq_role_to_mappings mapping data
+            structure
+          cid(str): The customer ID to use i.e. C02dfkjhd
+          project_id(str): Project ID
 
         Returns:
-            bool: True on success. False on failure
+          bool: True on success. False on failure
         """
         td2bq_groups_map = self.get_groups_from_bq_role_to_mappings(bq_role_to_mappings)
 
@@ -170,6 +173,7 @@ class Td2BqUsersMap:
             },
         }
 
+        result = True
         for group, users in td2bq_groups_map.items():
             group_name = group.split("@")[0]
 
@@ -180,11 +184,11 @@ class Td2BqUsersMap:
             # write out email list
             emails = {"emails": list(users)}
 
-            ef_name = self.generated_tf_folder + fname
-            logger.info("paths=", ef_name, self.generated_tf_folder)
-            if not write_json_file(ef_name, emails):
-                logger.info("Problem writing group email file")
-                return False
+            ef_name = self.tf_folder + fname
+            # logger.info("paths=", ef_name, self.tf_folder)
+            if not td2bq_util.write_json_file(ef_name, emails):
+                logger.error("Error writing terraform group email file %s", ef_name)
+                result = False
 
             # update the rest of the tf_template
             tf_group = self.get_group_dict(group, cid)
@@ -198,28 +202,30 @@ class Td2BqUsersMap:
                 member_name
             ] = tf_member
 
-        if not write_json_file(self.generated_tf_groups_file, tf_template):
-            logger.info("Problem writing IAM group file")
-            return False
-        return True
+        if not td2bq_util.write_json_file(self.generated_tf_groups_file, tf_template):
+            logger.error(
+                "Error, couldn't write IAM group file %s", self.generated_tf_groups_file
+            )
+            result = False
+        return result
 
     def gen_tf_iam_custom_roles(
         self, bq_role_to_mappings: dict, dedupe_mapping: dict, project_id: str
     ) -> bool:
-        """
-        Generate Terraform script that will create IAM custom roles. Valid roles
-        are placed in one file while invalid
+        """Generate Terraform script that will create IAM custom roles.
+
+        Valid roles are placed in one file while invalid
         roles (permission is n/a) is put in another file. Valid roles will also
         be deduplicated (roles with same IAM
         permissions will be combined into one custom role).
+
         Args:
-            bq_role_to_mappings(dict): bq_role_to_mappings mapping data
-              structure
-            dedupe_mapping(dict): IAM permissions mapped to their custom roles
-            project_id(str): Project ID
+          bq_role_to_mappings(dict): bq_role_to_mappings mapping data structure
+          dedupe_mapping(dict): IAM permissions mapped to their custom roles
+          project_id(str): Project ID
 
         Returns:
-            bool: True on success. False on failure
+          bool: True on success. False on failure
         """
         valid_roles = dict()
         invalid_roles = dict()
@@ -241,22 +247,6 @@ class Td2BqUsersMap:
                     "project": project_id,
                 }
 
-        # for custom_role, custom_role_info in bq_role_to_mappings.items():
-        #     if "n/a" in custom_role_info["IAM"]:
-        #         invalid_roles[custom_role] = {
-        #             "role_id": custom_role,
-        #             "title": custom_role,
-        #             "permissions": list(custom_role_info["IAM"]),
-        #             "project": project_id
-        #         }
-        #     else:
-        #         valid_roles[custom_role] = {
-        #             "role_id": custom_role,
-        #             "title": custom_role,
-        #             "permissions": list(custom_role_info["IAM"]),
-        #             "project": project_id
-        #         }
-
         invalid_tf_template = {
             "resource": {"google_project_iam_custom_role": invalid_roles}
         }
@@ -264,13 +254,21 @@ class Td2BqUsersMap:
             "resource": {"google_project_iam_custom_role": valid_roles}
         }
 
-        if not write_json_file(self.generated_tf_custom_roles_file, valid_tf_template):
-            logger.info("Problem writing IAM custom roles file")
+        if not td2bq_util.write_json_file(
+            self.generated_tf_custom_roles_file, valid_tf_template
+        ):
+            logger.error(
+                "Error writing Terraform for IAM custom roles file %s",
+                self.generated_tf_custom_roles_file,
+            )
             return False
-        if not write_json_file(
+        if not td2bq_util.write_json_file(
             self.generated_tf_invalid_custom_roles_file, invalid_tf_template
         ):
-            logger.info("Problem writing IAM invalid custom roles file")
+            logger.error(
+                "Error writing IAM invalid custom roles file %s",
+                self.generated_tf_invalid_custom_roles_file,
+            )
             return False
 
         return True
@@ -278,17 +276,18 @@ class Td2BqUsersMap:
     def gen_tf_bq_table_dataset_iam_binding(
         self, bq_role_to_mappings: dict, dedupe_mapping: dict, project_id: str
     ) -> bool:
-        """
+        """Generate Terraform for users/groups and BQ datasets/tables bindings.
+
         Generate Terraform script that will create binding of IAM custom roles
         to users/groups, and BQ datasets/tables.
+
         Args:
-            bq_role_to_mappings(dict): bq_role_to_mappings mapping data
-              structure
-            dedupe_mapping(dict): IAM permissions mapped to their custom roles
-            project_id(str): Project ID
+          bq_role_to_mappings(dict): bq_role_to_mappings mapping data structure
+          dedupe_mapping(dict): IAM permissions mapped to their custom roles
+          project_id(str): Project ID
 
         Returns:
-            bool: True on success. False on failure
+          bool: True on success. False on failure
         """
         # load tf template into dictionary
         tf_template_dataset = {"resource": {"google_bigquery_dataset_iam_member": {}}}
@@ -360,15 +359,25 @@ class Td2BqUsersMap:
                                 "google_bigquery_dataset_iam_member"
                             ][member] = binding[member]
 
+        result = True
         if tf_template_table["resource"]["google_bigquery_table_iam_member"]:
-            if not write_json_file(self.generated_tf_tables_file, tf_template_table):
-                logger.info("Problem writing IAM group to BQ table binding file")
-                return False
+            if not td2bq_util.write_json_file(
+                self.generated_tf_tables_file, tf_template_table
+            ):
+                logger.error(
+                    "Error writing IAM group to BigQuery table binding file %s",
+                    self.generated_tf_tables_file,
+                )
+                result = False
+
         if tf_template_dataset["resource"]["google_bigquery_dataset_iam_member"]:
-            if not write_json_file(
+            if not td2bq_util.write_json_file(
                 self.generated_tf_datasets_file, tf_template_dataset
             ):
-                logger.info("Problem writing IAM group to BQ dataset binding file")
-                return False
+                logger.error(
+                    "Error writing IAM group to BQ dataset binding file %s",
+                    self.generated_tf_datasets_file,
+                )
+                result = False
 
-        return True
+        return result

@@ -36,13 +36,13 @@ class Td2BqJson:
         # json files
         if os.path.isdir(change_folder):
             self.json_folder = os.path.join(change_folder, "json_generated/")
-            self.custom_roles_folder = os.path.join(self.json_folder, "custom_roles/")
+            self.custom_roles_folder = os.path.join(self.json_folder, "custom_roles")
             # self.invalid_roles_folder = os.path.join(self.json_folder,
             #                                          "custom_roles/invalid/")
             # self.member_role_binding_file = os.path.join(self.json_folder,
             #                                              "member_role_binding.json")
-            self.datasets_folder = os.path.join(self.json_folder, "datasets/")
-            self.tables_folder = os.path.join(self.json_folder, "tables/")
+            self.datasets_folder = os.path.join(self.json_folder, "datasets")
+            self.tables_folder = os.path.join(self.json_folder, "tables")
         else:
             raise ValueError(f"Path {change_folder} is not an existing directory.")
 
@@ -71,7 +71,7 @@ class Td2BqJson:
                 }
                 # make_dirs(self.custom_roles_folder, overwrite)
                 if not td2bq_util.write_json_file(
-                    self.custom_roles_folder + unique_role + ".json",
+                    os.path.join(self.custom_roles_folder, unique_role + ".json"),
                     json_custom_role[unique_role],
                 ):
                     logger.error(
@@ -210,7 +210,7 @@ class Td2BqJson:
                             elif not self.write_json(new_binding, file, "bindings"):
                                 result = False
                         else:  # resource is a dataset
-                            file = self.datasets_folder + data + ".json"
+                            file = os.path.join(self.datasets_folder, data + ".json")
                             if file not in files_created:
                                 files_created.append(file)
                                 if not td2bq_util.write_json_file(
@@ -268,7 +268,7 @@ class Td2BqJson:
                             elif not self.write_json(new_binding, file, "bindings"):
                                 result = False
                         else:  # resource is a dataset
-                            file = self.datasets_folder + data + ".json"
+                            file = os.path.join(self.datasets_folder, data + ".json")
                             if file not in files_created:
                                 files_created.append(file)
                                 if not td2bq_util.write_json_file(

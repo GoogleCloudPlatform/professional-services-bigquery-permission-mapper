@@ -225,4 +225,4 @@ def test_generate_jsons_test8():
 
 
 if __name__ == "__main__":
-    test_generate_jsons_test6()
+    test_generate_jsons_test8()

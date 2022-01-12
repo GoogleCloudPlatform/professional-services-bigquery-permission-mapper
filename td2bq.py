@@ -39,8 +39,14 @@ from logging import handlers
 import pandas as pd
 import teradatasql
 
-from td2bq_mapper import (td2bq_arc_map, td2bq_create_json, td2bq_mod3_map,
-                          td2bq_perm, td2bq_users_map, td2bq_util)
+from td2bq_mapper import (
+    td2bq_arc_map,
+    td2bq_create_json,
+    td2bq_mod3_map,
+    td2bq_perm,
+    td2bq_users_map,
+    td2bq_util,
+)
 
 TD_PERMISSIONS_CSV = "/data/report_permissions.csv"
 TD_USERS_AND_ROLES_CSV = "/data/report_users_and_roles.csv"
@@ -358,7 +364,7 @@ def generate_jsons(
 
     if not td2bq_json.create_json_iam_custom_roles(dedupe_map):
         logger.error(
-            "Some custom roles JSON files were not created. Check log "
+            "Some JSON files for Bigquery custom roles were not created. Check log "
             "file %s for details.",
             logger.handlers[0].baseFilename,
         )
@@ -373,7 +379,7 @@ def generate_jsons(
 
     if not td2bq_json.create_dataset_role_json_file(map_file, dedupe_map, project_id):
         logger.error(
-            "Some JSON bindings for datasets/tables were not created. "
+            "Some JSON bindings for BigQuery datasets/tables were not created. "
             "Check log file %s for details.",
             logger.handlers[0].baseFilename,
         )
@@ -400,34 +406,56 @@ def generate_tfscripts(
       project_id: GCP project ID. It is used in generated Terraform scripts
       overwrite: If True the Mapper will overwrite the output dirs and files
     """
-    td2bq_mod3 = td2bq_mod3_map.Td2BqMod3Map()
+    td2bq_mod3 = td2bq_mod3_map.Td2BqMod3Map(overwrite)
     td2bq_arc = td2bq_arc_map.Td2BqArcMap()
-    perm = td2bq_perm.Td2BqPerm()
-    td2bq_users = td2bq_users_map.Td2BqUsersMap()
+    perm = td2bq_perm.Td2BqPerm(td_acl_file)
+    td2bq_tf = td2bq_users_map.Td2BqUsersMap(change_folder)
+    if not (
+        td2bq_util.make_dirs(
+            td2bq_tf.tf_folder,
+            overwrite,
+            {
+                td2bq_tf.generated_tf_groups_file,
+                td2bq_tf.generated_tf_custom_roles_file,
+                td2bq_tf.generated_tf_datasets_file,
+                td2bq_tf.generated_tf_tables_file,
+            },
+        )
+    ):
+        raise ValueError(
+            f"Could not create all output directories in "
+            f"{td2bq_tf.tf_folder}. Check the log file "
+            f"{logger.handlers[0].baseFilename} for details"
+        )
 
     arc_file = td2bq_arc.local_map_file
     perm_file = perm.internal_perm_file
     map_file = td2bq_mod3.get_bq_role_to_mappings(change_folder, perm_file, arc_file)
     dedupe_map = td2bq_mod3.get_dedupe_roles()
 
-    if map_file is None:
-        logger.error("Error loading in mod3 internal map file")
+    if not td2bq_tf.gen_tf_iam_groups(map_file, customer_id, project_id):
+        logger.error(
+            "Some Terraforms for Google groups were not created. Check log "
+            "file %s for details.",
+            logger.handlers[0].baseFilename,
+        )
         return None
 
-    if not td2bq_users.gen_tf_iam_groups(map_file, customer_id, project_id):
-        logger.error("Error generating Terraform for Google groups")
+    if not td2bq_tf.gen_tf_iam_custom_roles(map_file, dedupe_map, project_id):
+        logger.error(
+            "Some Terraforms for BigQuery custom roles were not created. Check log "
+            "file %s for details.",
+            logger.handlers[0].baseFilename,
+        )
         return None
 
-    if not td2bq_users.gen_tf_iam_custom_roles(map_file, dedupe_map, project_id):
-        logger.error("Error generating Terraform for IAM custom roles")
-        return None
-
-    if not td2bq_users.gen_tf_bq_table_dataset_iam_binding(
+    if not td2bq_tf.gen_tf_bq_table_dataset_iam_binding(
         map_file, dedupe_map, project_id
     ):
         logger.error(
-            "Error generating Terraform IAM custom roles to BigQuery "
-            "datasets bindings"
+            "Some Terraforms for BigQuery datasets/tables bindings were not created. "
+            "file %s for details.",
+            logger.handlers[0].baseFilename,
         )
         return None
 
@@ -483,29 +511,55 @@ if __name__ == "__main__":
         )
 
         # Parameters for Terraform module:
-        # NOTE: THIS TERRAFORM GENERATION COMMAND WILL BE ENABLED IN THE NEXT FEW WEEKS
-        # parser_getmap = subparsers.add_parser(
-        #     "generate_tf", help="Generate BigQuery permissions Terraform scripts."
-        # )
-        # parser_getmap.add_argument(
-        #     "--change_folder",
-        #     help="The full path to the folder which will contain modified CSV "
-        #     "files with all GCP resources to be migrated",
-        #     required=True,
-        #     type=str,
-        # )
-        # parser_getmap.add_argument(
-        #     "--customer_ID",
-        #     help="Customer ID needed to generate TF script",
-        #     required=True,
-        #     type=str,
-        # )
-        # parser_getmap.add_argument(
-        #     "--project_ID",
-        #     help="GCP project ID of the permissions to be mapped",
-        #     required=True,
-        #     type=str,
-        # )
+        parser_gettf = subparsers.add_parser(
+            "generate_tf", help="Generate BigQuery permissions Terraform scripts."
+        )
+        parser_gettf.add_argument(
+            "--td_acl_file",
+            help="Path to the CSV file that contains Teradata permissions",
+            required=True,
+            type=str,
+        )
+        parser_gettf.add_argument(
+            "--change_folder",
+            help="The full path to the folder which will contain modified CSV "
+            "files with all GCP resources to be migrated",
+            required=True,
+            type=str,
+        )
+        parser_gettf.add_argument(
+            "--customer_ID",
+            help="Customer ID needed to generate TF script",
+            required=True,
+            type=str,
+        )
+        parser_gettf.add_argument(
+            "--project_ID",
+            help="GCP project ID of the permissions to be mapped",
+            required=True,
+            type=str,
+        )
+        parser_gettf.add_argument(
+            "--log",
+            dest="log",
+            default=os.path.join(
+                os.path.abspath(os.path.join(td2bq_util.get_root_dir(), os.pardir)),
+                LOG_FILE_NAME,
+            ),
+            help="Full path to the output log file. Default log file {}".format(
+                os.path.join(
+                    os.path.abspath(os.path.join(td2bq_util.get_root_dir(), os.pardir)),
+                    LOG_FILE_NAME,
+                )
+            ),
+        )
+        parser_gettf.add_argument(
+            "-o",
+            "--overwrite",
+            dest="overwrite",
+            action="store_true",
+            help="Overwrite the existing output files",
+        )
 
         # parameters for JSON module
         parser_getjson = subparsers.add_parser(
@@ -574,7 +628,13 @@ if __name__ == "__main__":
                 if args.content == "validate":
                     create_change_files(td_acl_file, change_folder, args.overwrite)
                 elif args.content == "generate_tf":
-                    generate_tfscripts(change_folder, args.customer_ID, args.project_ID)
+                    generate_tfscripts(
+                        td_acl_file,
+                        change_folder,
+                        args.customer_ID,
+                        args.project_ID,
+                        args.overwrite,
+                    )
                 elif args.content == "generate_json":
                     generate_jsons(
                         td_acl_file, change_folder, args.project_ID, args.overwrite
@@ -595,4 +655,3 @@ if __name__ == "__main__":
                 logger.info("ACL mapper finished successfully")
     except Exception:
         logger.exception("Fatal exception in ACL Mapper")
-        raise
