@@ -3,6 +3,7 @@
 **/terraform/
 **/tf_backup
 td2bq_mapper/tests/temp_dir/*.*
+!td2bq_mapper/tests/temp_dir/.gitkeep
 terraform_generated/*.*
 json_generated/*.*
 logs/
