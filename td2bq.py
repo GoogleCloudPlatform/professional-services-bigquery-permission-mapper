@@ -39,8 +39,14 @@ from logging import handlers
 import pandas as pd
 import teradatasql
 
-from td2bq_mapper import (td2bq_arc_map, td2bq_create_json, td2bq_mod3_map,
-                          td2bq_perm, td2bq_users_map, td2bq_util)
+from td2bq_mapper import (
+    td2bq_arc_map,
+    td2bq_create_json,
+    td2bq_mod3_map,
+    td2bq_perm,
+    td2bq_users_map,
+    td2bq_util,
+)
 
 TD_PERMISSIONS_CSV = "/data/report_permissions.csv"
 TD_USERS_AND_ROLES_CSV = "/data/report_users_and_roles.csv"
