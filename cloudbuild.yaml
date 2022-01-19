@@ -6,8 +6,8 @@ steps:
   
   - id: "check formatting"
     name: python:3.9
-    entrypoint: black
-    args: [".", "--check"]
+    entrypoint: python3
+    args: ["-m", "black", ".", "--check"]
 
   - id: "check linting"
     name: python:3.9
