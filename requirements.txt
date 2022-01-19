@@ -3,3 +3,7 @@ pandas
 validate_email
 requests
 teradatasql
+autoflake==1.4
+black==21.11b1
+flake8==4.0.1
+isort==5.10.1
