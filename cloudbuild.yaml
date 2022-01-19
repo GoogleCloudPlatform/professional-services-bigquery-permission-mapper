@@ -22,7 +22,7 @@ steps:
   - id: "check import sorting"
     name: python:3.9
     entrypoint: python3
-    args: ["-m", "isort", "--count", "--profile=black", "."]
+    args: ["-m", "isort", "--check-only", "--profile=black", "."]
 
   - id: "run unit tests"
     name: python:3.9
