@@ -17,7 +17,7 @@ steps:
   - id: "check unused imports"
     name: python:3.9
     entrypoint: python3
-    args: ["-m", "autoflake", "-r", "--remove-all-unused-imports", "--check"]
+    args: ["-m", "autoflake", "-r", "--remove-all-unused-imports", "--check", "."]
 
   - id: "check import sorting"
     name: python:3.9
