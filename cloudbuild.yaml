@@ -11,8 +11,8 @@ steps:
 
   - id: "check linting"
     name: python:3.9
-    entrypoint: flake8
-    args: ["--count", "."]
+    entrypoint: python3
+    args: ["flake8", "--count", "."]
 
   - id: "check unused imports"
     name: python:3.9
@@ -21,8 +21,8 @@ steps:
 
   - id: "check import sorting"
     name: python:3.9
-    entrypoint: isort
-    args: ["--count", "--profile=black", "."]
+    entrypoint: python3
+    args: ["isort", "--count", "--profile=black", "."]
 
   - id: "run unit tests"
     name: python:3.9
