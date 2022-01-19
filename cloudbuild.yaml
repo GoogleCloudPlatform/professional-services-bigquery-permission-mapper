@@ -27,4 +27,6 @@ steps:
   - id: "run unit tests"
     name: python:3.9
     entrypoint: python3
+    env:
+    - "PYTHONPATH=."
     args: ["td2bq_mapper/tests/test_td2bq.py"]
