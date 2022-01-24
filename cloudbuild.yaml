@@ -35,3 +35,4 @@ steps:
     - "PYTHONPATH=."
     args: ["td2bq_mapper/tests/test_td2bq.py"]
     waitFor: ["install dependencies"]
+    
