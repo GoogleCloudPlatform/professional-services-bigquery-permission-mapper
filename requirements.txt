@@ -1,8 +1,7 @@
-pytest
-pandas
-validate_email
-requests
-teradatasql
+pandas==1.2.3
+requests==2.26.0
+teradatasql==17.10.0.5
+validate_email==1.3
 autoflake==1.4
 black==21.11b1
 flake8==4.0.1
