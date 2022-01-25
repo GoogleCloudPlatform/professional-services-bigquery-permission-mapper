@@ -42,7 +42,7 @@ class Td2BqPerm:
     to BigQuery.
     """
 
-    def __init__(self, td_acl_file, users=None, roles=None) -> None:
+    def  __init__(self, td_acl_file, users=None, roles=None) -> None:
         """Td2BqPerms instantiates and stores td2bq permissions.
 
         Args:
@@ -463,6 +463,7 @@ class Td2BqPerm:
         claimed_roles = set()  # roles that have been checked and is a duplicate
         group_count = 1
 
+
         # finds the duplicate TD roles and assigns to incremented group name
         for td_role, data_to_arc in self.td_role_to_data_to_arc.items():
             if td_role not in claimed_roles:
@@ -476,13 +477,13 @@ class Td2BqPerm:
                                         if data_to_arc[data] != data_to_arc_2[data]:
                                             break
                                     group_to_td_role_to_renamed_group[
-                                        "group" + str(group_count) + "@{%domain.com%}"
+                                        "group" + str(group_count)
                                     ] = dict()
                                     group_to_td_role_to_renamed_group[
-                                        "group" + str(group_count) + "@{%domain.com%}"
+                                        "group" + str(group_count)
                                     ][td_role] = ""
                                     group_to_td_role_to_renamed_group[
-                                        "group" + str(group_count) + "@{%domain.com%}"
+                                        "group" + str(group_count)
                                     ][td_role_2] = ""
                                     claimed_roles.add(
                                         td_role_2
@@ -497,10 +498,10 @@ class Td2BqPerm:
         for td_role in self.td_role_to_data_to_arc.keys():
             if td_role not in claimed_roles:
                 group_to_td_role_to_renamed_group[
-                    "group" + str(group_count) + "@{%domain.com%}"
+                    "group" + str(group_count)
                 ] = dict()
                 group_to_td_role_to_renamed_group[
-                    "group" + str(group_count) + "@{%domain.com%}"
+                    "group" + str(group_count)
                 ][td_role] = ""
                 claimed_roles.add(td_role)  # role marked as claimed (it's own group)
                 group_count += 1
