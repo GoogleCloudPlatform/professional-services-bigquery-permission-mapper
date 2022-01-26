@@ -1,65 +1,481 @@
-{"version": 1.2,
-  "AE": {"description": "Alter External Procedure" , "bq_permissions": ["bigquery.routines.update"], "Error": ""} ,
-  "AF": {"description": "Alter Function" , "bq_permissions": ["bigquery.routines.update"], "Error": ""} ,
-  "AP": {"description": "Alter Procedure" , "bq_permissions": ["bigquery.routines.update"], "Error": ""} ,
-  "AS": {"description": "Abort Session" , "bq_permissions": ["bigquery.jobs.update"], "Error": ""} ,
-  "CA": {"description": "Create Authorization" , "bq_permissions": ["n/a"], "Error": "Admin level permissions. Outside permission scope of BigQuery users"} ,
-  "CD": {"description": "Create Database" , "bq_permissions": ["bigquery.datasets.create"], "Error": ""} ,
-  "CE": {"description": "Create External Procedure" , "bq_permissions": ["bigquery.routines.create"], "Error": ""} ,
-  "CF": {"description": "Create Function" , "bq_permissions": ["bigquery.routines.create"], "Error": ""} ,
-  "CG": {"description": "Create Trigger" , "bq_permissions": ["n/a"], "Error": "BigQuery doesn't support triggers. Use Cloud Logging + Pub/Sub to trigger a script when some event happens in BigQuery."} ,
-  "CM": {"description": "Create Macro" , "bq_permissions": ["bigquery.routines.create"], "Error": ""} ,
-  "CO": {"description": "Create Profile" , "bq_permissions": ["n/a"], "Error": "Admin level permissions. Outside permission scope of BigQuery users"} ,
-  "CP": {"description": "Checkpoint" , "bq_permissions": ["n/a"], "Error": "There is no corresponding concept in BigQuery"} ,
-  "CR": {"description": "Create Role" , "bq_permissions": ["n/a"], "Error": "Admin level permissions. Outside permission scope of BigQuery users"} ,
-  "CT": {"description": "Create Table" , "bq_permissions": ["bigquery.tables.create","bigquery.tables.update","bigquery.tables.updateTag","bigquery.tables.setCategory"], "Error": ""} ,
-  "CU": {"description": "Create User" , "bq_permissions": ["n/a"], "Error": "Admin level permissions. Outside permission scope of BigQuery users"} ,
-  "CV": {"description": "Create View" , "bq_permissions": ["bigquery.tables.create","bigquery.tables.update","bigquery.tables.updateTag","bigquery.tables.setCategory"], "Error": ""} ,
-  "D": {"description": "Delete" , "bq_permissions": ["n/a"], "Error": "BigQeury can grant (R,I,U,D) or no data modification is allowed"} ,
-  "DA": {"description": "Drop Authorization" , "bq_permissions": ["n/a"], "Error": "Admin level permissions. Outside permission scope of BigQuery users"} ,
-  "DD": {"description": "Drop Database" , "bq_permissions": ["bigquery.datasets.delete"], "Error": ""} ,
-  "DF": {"description": "Drop Function" , "bq_permissions": ["bigquery.routines.delete"], "Error": ""} ,
-  "DG": {"description": "Drop Trigger" , "bq_permissions": ["n/a"], "Error": "BigQuery doesn't support triggers. Use Cloud Logging + Pub/Sub to trigger a script when some event happens in BigQuery."} ,
-  "DM": {"description": "Drop Macro" , "bq_permissions": ["bigquery.routines.delete"], "Error": ""} ,
-  "DO": {"description": "Drop Profile" , "bq_permissions": ["n/a"], "Error": "Admin level permissions. Outside permission scope of BigQuery users"} ,
-  "DP": {"description": "Dump" , "bq_permissions": ["n/a"], "Error": "backup/restore policy"} ,
-  "DR": {"description": "Drop Role" , "bq_permissions": ["n/a"], "Error": "Admin level permissions. Outside permission scope of BigQuery users"} ,
-  "DT": {"description": "Drop Table" , "bq_permissions": ["bigquery.tables.delete"], "Error": ""} ,
-  "DU": {"description": "Drop User" , "bq_permissions": ["n/a"], "Error": "Admin level permissions. Outside permission scope of BigQuery users"} ,
-  "DV": {"description": "Drop View" , "bq_permissions": ["bigquery.tables.delete"], "Error": ""} ,
-  "E": {"description": "Execute" , "bq_permissions": ["n/a"], "Error": "Users have ECECUTE by default. Adding Execute-like permissions in v.2"} ,
-  "EF": {"description": "Execute Function" , "bq_permissions": ["n/a"], "Error": "Users have ECECUTE by default. Adding Execute-like permissions in v.2"} ,
-  "GC": {"description": "Create GLOP SET" , "bq_permissions": ["n/a"], "Error": "There is no corresponding concept in BigQuery"} ,
-  "GD": {"description": "Drop GLOP SET" , "bq_permissions": ["n/a"], "Error": "There is no corresponding concept in BigQuery"} ,
-  "GM": {"description": "GLOP Member" , "bq_permissions": ["n/a"], "Error": "There is no corresponding concept in BigQuery"} ,
-  "I": {"description": "Insert" , "bq_permissions": ["n/a"], "Error": "BigQeury can grant (R,I,U,D) or no data modification is allowed"} ,
-  "IX": {"description": "Indexes" , "bq_permissions": ["n/a"], "Error": "There is no corresponding concept in BigQuery"} ,
-  "MR": {"description": "Monitor Resource" , "bq_permissions": ["n/a"], "Error": "Admin level permissions. Outside permission scope of BigQuery users"} ,
-  "MS": {"description": "Monitor Session" , "bq_permissions": ["bigquery.jobs.listAll"], "Error": ""} ,
-  "NT": {"description": "Non Temporal" , "bq_permissions": ["n/a"], "Error": "There is no corresponding concept in BigQuery"} ,
-  "OA": {"description": "Override Archive Constraint" , "bq_permissions": ["n/a"], "Error": "Row level security. Adding support in v.2"} ,
-  "OD": {"description": "Override Delete Constraint" , "bq_permissions": ["n/a"], "Error": "Row level security. Adding support in v.2"} ,
-  "OI": {"description": "Override Insert Constraint" , "bq_permissions": ["n/a"], "Error": "Row level security. Adding support in v.2"} ,
-  "OP": {"description": "Create Owner Procedure" , "bq_permissions": ["bigquery.routines.create"], "Error": ""} ,
-  "OR": {"description": "Override Restore Constraint" , "bq_permissions": ["n/a"], "Error": "Row level security. Adding support in v.2"} ,
-  "OS": {"description": "Override Select Constraint" , "bq_permissions": ["n/a"], "Error": "Row level security. Adding support in v.2"} ,
-  "OU": {"description": "Override Update Constraint" , "bq_permissions": ["n/a"], "Error": "Row level security. Adding support in v.2"} ,
-  "PC": {"description": "Create Procedure" , "bq_permissions": ["bigquery.routines.create"], "Error": ""} ,
-  "PD": {"description": "Drop Procedure" , "bq_permissions": ["bigquery.routines.delete"], "Error": ""} ,
-  "PE": {"description": "Execute Procedure" , "bq_permissions": ["n/a"], "Error": "Users have ECECUTE by default"} ,
-  "R": {"description": "Retrieve or Select" , "bq_permissions": ["bigquery.models.export","bigquery.models.getData","bigquery.models.getMetadata","bigquery.models.list","bigquery.routines.get","bigquery.routines.list","bigquery.tables.export","bigquery.tables.get","bigquery.tables.getData","bigquery.tables.list"], "Error": ""} ,
-  "RF": {"description": "References" , "bq_permissions": ["n/a"], "Error": "There is no corresponding concept in BigQuery"} ,
-  "RS": {"description": "Restore" , "bq_permissions": ["n/a"], "Error": "backup/restore policy"} ,
-  "SH": {"description": "Show" , "bq_permissions": ["bigquery.datasets.get","bigquery.datasets.getIamPolicy","bigquery.models.getMetadata","bigquery.models.list","bigquery.routines.get","bigquery.routines.list","bigquery.tables.get","bigquery.tables.getIamPolicy","bigquery.tables.list"], "Error": ""} ,
-  "SA": {"description": "Constraint Assignment" , "bq_permissions": ["n/a"], "Error": "There is no corresponding concept in BigQuery"} ,
-  "SD": {"description": "Constraint Definition" , "bq_permissions": ["n/a"], "Error": "There is no corresponding concept in BigQuery"} ,
-  "SS": {"description": "Set Session Rate" , "bq_permissions": ["n/a"], "Error": "Admin. Manage resources"} ,
-  "SR": {"description": "Set Resource Rate" , "bq_permissions": ["n/a"], "Error": "Admin. Manage resources"} ,
-  "ST": {"description": "Statistics" , "bq_permissions": ["n/a"], "Error": "There is no corresponding concept in BigQuery"} ,
-  "TH": {"description": "Connect Through" , "bq_permissions": ["n/a"], "Error": "There is no corresponding concept in BigQuery"} ,
-  "U": {"description": "Update" , "bq_permissions": ["n/a"], "Error": "BigQeury can grant (R,I,U,D) or no data modification is allowed"} ,
-  "UM": {"description": "UDT Method" , "bq_permissions": ["n/a"], "Error": "There is no corresponding concept in BigQuery"} ,
-  "UT": {"description": "UDT Type" , "bq_permissions": ["n/a"], "Error": "There is no corresponding concept in BigQuery"} ,
-  "UU": {"description": "UDT Usage" , "bq_permissions": ["n/a"], "Error": "There is no corresponding concept in BigQuery"} ,
-  "R,I,U,D": {"description": "" , "bq_permissions": ["bigquery.models.create","bigquery.models.delete","bigquery.models.getData","bigquery.models.getMetadata","bigquery.models.list","bigquery.models.updateData","bigquery.models.updateMetadata","bigquery.models.export","bigquery.routines.get","bigquery.routines.list","bigquery.tables.export","bigquery.tables.get","bigquery.tables.getData","bigquery.tables.list","bigquery.tables.updateData"], "Error": ""}
+{
+  "version": 1.2,
+  "AE": {
+    "description": "Alter External Procedure",
+    "bq_permissions": [
+      "bigquery.routines.update"
+    ],
+    "Error": ""
+  },
+  "AF": {
+    "description": "Alter Function",
+    "bq_permissions": [
+      "bigquery.routines.update"
+    ],
+    "Error": ""
+  },
+  "AP": {
+    "description": "Alter Procedure",
+    "bq_permissions": [
+      "bigquery.routines.update"
+    ],
+    "Error": ""
+  },
+  "AS": {
+    "description": "Abort Session",
+    "bq_permissions": [
+      "bigquery.jobs.update"
+    ],
+    "Error": ""
+  },
+  "CA": {
+    "description": "Create Authorization",
+    "bq_permissions": [
+      "n/a"
+    ],
+    "Error": "Admin level permissions. Outside permission scope of BigQuery users"
+  },
+  "CD": {
+    "description": "Create Database",
+    "bq_permissions": [
+      "bigquery.datasets.create"
+    ],
+    "Error": ""
+  },
+  "CE": {
+    "description": "Create External Procedure",
+    "bq_permissions": [
+      "bigquery.routines.create"
+    ],
+    "Error": ""
+  },
+  "CF": {
+    "description": "Create Function",
+    "bq_permissions": [
+      "bigquery.routines.create"
+    ],
+    "Error": ""
+  },
+  "CG": {
+    "description": "Create Trigger",
+    "bq_permissions": [
+      "n/a"
+    ],
+    "Error": "BigQuery doesn't support triggers. Use Cloud Logging + Pub/Sub to trigger a script when some event happens in BigQuery."
+  },
+  "CM": {
+    "description": "Create Macro",
+    "bq_permissions": [
+      "bigquery.routines.create"
+    ],
+    "Error": ""
+  },
+  "CO": {
+    "description": "Create Profile",
+    "bq_permissions": [
+      "n/a"
+    ],
+    "Error": "Admin level permissions. Outside permission scope of BigQuery users"
+  },
+  "CP": {
+    "description": "Checkpoint",
+    "bq_permissions": [
+      "n/a"
+    ],
+    "Error": "There is no corresponding concept in BigQuery"
+  },
+  "CR": {
+    "description": "Create Role",
+    "bq_permissions": [
+      "n/a"
+    ],
+    "Error": "Admin level permissions. Outside permission scope of BigQuery users"
+  },
+  "CT": {
+    "description": "Create Table",
+    "bq_permissions": [
+      "bigquery.tables.create",
+      "bigquery.tables.update",
+      "bigquery.tables.updateTag",
+      "bigquery.tables.setCategory"
+    ],
+    "Error": ""
+  },
+  "CU": {
+    "description": "Create User",
+    "bq_permissions": [
+      "n/a"
+    ],
+    "Error": "Admin level permissions. Outside permission scope of BigQuery users"
+  },
+  "CV": {
+    "description": "Create View",
+    "bq_permissions": [
+      "bigquery.tables.create",
+      "bigquery.tables.update",
+      "bigquery.tables.updateTag",
+      "bigquery.tables.setCategory"
+    ],
+    "Error": ""
+  },
+  "D": {
+    "description": "Delete",
+    "bq_permissions": [
+      "n/a"
+    ],
+    "Error": "BigQuery can grant (R,I,U,D) or no data modification is allowed"
+  },
+  "DA": {
+    "description": "Drop Authorization",
+    "bq_permissions": [
+      "n/a"
+    ],
+    "Error": "Admin level permissions. Outside permission scope of BigQuery users"
+  },
+  "DD": {
+    "description": "Drop Database",
+    "bq_permissions": [
+      "bigquery.datasets.delete"
+    ],
+    "Error": ""
+  },
+  "DF": {
+    "description": "Drop Function",
+    "bq_permissions": [
+      "bigquery.routines.delete"
+    ],
+    "Error": ""
+  },
+  "DG": {
+    "description": "Drop Trigger",
+    "bq_permissions": [
+      "n/a"
+    ],
+    "Error": "BigQuery doesn't support triggers. Use Cloud Logging + Pub/Sub to trigger a script when some event happens in BigQuery."
+  },
+  "DM": {
+    "description": "Drop Macro",
+    "bq_permissions": [
+      "bigquery.routines.delete"
+    ],
+    "Error": ""
+  },
+  "DO": {
+    "description": "Drop Profile",
+    "bq_permissions": [
+      "n/a"
+    ],
+    "Error": "Admin level permissions. Outside permission scope of BigQuery users"
+  },
+  "DP": {
+    "description": "Dump",
+    "bq_permissions": [
+      "n/a"
+    ],
+    "Error": "backup/restore policy"
+  },
+  "DR": {
+    "description": "Drop Role",
+    "bq_permissions": [
+      "n/a"
+    ],
+    "Error": "Admin level permissions. Outside permission scope of BigQuery users"
+  },
+  "DT": {
+    "description": "Drop Table",
+    "bq_permissions": [
+      "bigquery.tables.delete"
+    ],
+    "Error": ""
+  },
+  "DU": {
+    "description": "Drop User",
+    "bq_permissions": [
+      "n/a"
+    ],
+    "Error": "Admin level permissions. Outside permission scope of BigQuery users"
+  },
+  "DV": {
+    "description": "Drop View",
+    "bq_permissions": [
+      "bigquery.tables.delete"
+    ],
+    "Error": ""
+  },
+  "E": {
+    "description": "Execute",
+    "bq_permissions": [
+      "n/a"
+    ],
+    "Error": "Users have ECECUTE by default. Adding Execute-like permissions in v.2"
+  },
+  "EF": {
+    "description": "Execute Function",
+    "bq_permissions": [
+      "n/a"
+    ],
+    "Error": "Users have ECECUTE by default. Adding Execute-like permissions in v.2"
+  },
+  "GC": {
+    "description": "Create GLOP SET",
+    "bq_permissions": [
+      "n/a"
+    ],
+    "Error": "There is no corresponding concept in BigQuery"
+  },
+  "GD": {
+    "description": "Drop GLOP SET",
+    "bq_permissions": [
+      "n/a"
+    ],
+    "Error": "There is no corresponding concept in BigQuery"
+  },
+  "GM": {
+    "description": "GLOP Member",
+    "bq_permissions": [
+      "n/a"
+    ],
+    "Error": "There is no corresponding concept in BigQuery"
+  },
+  "I": {
+    "description": "Insert",
+    "bq_permissions": [
+      "n/a"
+    ],
+    "Error": "BigQuery can grant (R,I,U,D) or no data modification is allowed"
+  },
+  "IX": {
+    "description": "Indexes",
+    "bq_permissions": [
+      "n/a"
+    ],
+    "Error": "There is no corresponding concept in BigQuery"
+  },
+  "MR": {
+    "description": "Monitor Resource",
+    "bq_permissions": [
+      "n/a"
+    ],
+    "Error": "Admin level permissions. Outside permission scope of BigQuery users"
+  },
+  "MS": {
+    "description": "Monitor Session",
+    "bq_permissions": [
+      "bigquery.jobs.listAll"
+    ],
+    "Error": ""
+  },
+  "NT": {
+    "description": "Non Temporal",
+    "bq_permissions": [
+      "n/a"
+    ],
+    "Error": "There is no corresponding concept in BigQuery"
+  },
+  "OA": {
+    "description": "Override Archive Constraint",
+    "bq_permissions": [
+      "n/a"
+    ],
+    "Error": "Row level security. Adding support in v.2"
+  },
+  "OD": {
+    "description": "Override Delete Constraint",
+    "bq_permissions": [
+      "n/a"
+    ],
+    "Error": "Row level security. Adding support in v.2"
+  },
+  "OI": {
+    "description": "Override Insert Constraint",
+    "bq_permissions": [
+      "n/a"
+    ],
+    "Error": "Row level security. Adding support in v.2"
+  },
+  "OP": {
+    "description": "Create Owner Procedure",
+    "bq_permissions": [
+      "bigquery.routines.create"
+    ],
+    "Error": ""
+  },
+  "OR": {
+    "description": "Override Restore Constraint",
+    "bq_permissions": [
+      "n/a"
+    ],
+    "Error": "Row level security. Adding support in v.2"
+  },
+  "OS": {
+    "description": "Override Select Constraint",
+    "bq_permissions": [
+      "n/a"
+    ],
+    "Error": "Row level security. Adding support in v.2"
+  },
+  "OU": {
+    "description": "Override Update Constraint",
+    "bq_permissions": [
+      "n/a"
+    ],
+    "Error": "Row level security. Adding support in v.2"
+  },
+  "PC": {
+    "description": "Create Procedure",
+    "bq_permissions": [
+      "bigquery.routines.create"
+    ],
+    "Error": ""
+  },
+  "PD": {
+    "description": "Drop Procedure",
+    "bq_permissions": [
+      "bigquery.routines.delete"
+    ],
+    "Error": ""
+  },
+  "PE": {
+    "description": "Execute Procedure",
+    "bq_permissions": [
+      "n/a"
+    ],
+    "Error": "Users have ECECUTE by default"
+  },
+  "R": {
+    "description": "Retrieve or Select",
+    "bq_permissions": [
+      "bigquery.models.export",
+      "bigquery.models.getData",
+      "bigquery.models.getMetadata",
+      "bigquery.models.list",
+      "bigquery.routines.get",
+      "bigquery.routines.list",
+      "bigquery.tables.export",
+      "bigquery.tables.get",
+      "bigquery.tables.getData",
+      "bigquery.tables.list"
+    ],
+    "Error": ""
+  },
+  "RF": {
+    "description": "References",
+    "bq_permissions": [
+      "n/a"
+    ],
+    "Error": "There is no corresponding concept in BigQuery"
+  },
+  "RS": {
+    "description": "Restore",
+    "bq_permissions": [
+      "n/a"
+    ],
+    "Error": "backup/restore policy"
+  },
+  "SH": {
+    "description": "Show",
+    "bq_permissions": [
+      "bigquery.datasets.get",
+      "bigquery.datasets.getIamPolicy",
+      "bigquery.models.getMetadata",
+      "bigquery.models.list",
+      "bigquery.routines.get",
+      "bigquery.routines.list",
+      "bigquery.tables.get",
+      "bigquery.tables.getIamPolicy",
+      "bigquery.tables.list"
+    ],
+    "Error": ""
+  },
+  "SA": {
+    "description": "Constraint Assignment",
+    "bq_permissions": [
+      "n/a"
+    ],
+    "Error": "There is no corresponding concept in BigQuery"
+  },
+  "SD": {
+    "description": "Constraint Definition",
+    "bq_permissions": [
+      "n/a"
+    ],
+    "Error": "There is no corresponding concept in BigQuery"
+  },
+  "SS": {
+    "description": "Set Session Rate",
+    "bq_permissions": [
+      "n/a"
+    ],
+    "Error": "Admin. Manage resources"
+  },
+  "SR": {
+    "description": "Set Resource Rate",
+    "bq_permissions": [
+      "n/a"
+    ],
+    "Error": "Admin. Manage resources"
+  },
+  "ST": {
+    "description": "Statistics",
+    "bq_permissions": [
+      "n/a"
+    ],
+    "Error": "There is no corresponding concept in BigQuery"
+  },
+  "TH": {
+    "description": "Connect Through",
+    "bq_permissions": [
+      "n/a"
+    ],
+    "Error": "There is no corresponding concept in BigQuery"
+  },
+  "U": {
+    "description": "Update",
+    "bq_permissions": [
+      "n/a"
+    ],
+    "Error": "BigQuery can grant (R,I,U,D) or no data modification is allowed"
+  },
+  "UM": {
+    "description": "UDT Method",
+    "bq_permissions": [
+      "n/a"
+    ],
+    "Error": "There is no corresponding concept in BigQuery"
+  },
+  "UT": {
+    "description": "UDT Type",
+    "bq_permissions": [
+      "n/a"
+    ],
+    "Error": "There is no corresponding concept in BigQuery"
+  },
+  "UU": {
+    "description": "UDT Usage",
+    "bq_permissions": [
+      "n/a"
+    ],
+    "Error": "There is no corresponding concept in BigQuery"
+  },
+  "R,I,U,D": {
+    "description": "",
+    "bq_permissions": [
+      "bigquery.models.create",
+      "bigquery.models.delete",
+      "bigquery.models.getData",
+      "bigquery.models.getMetadata",
+      "bigquery.models.list",
+      "bigquery.models.updateData",
+      "bigquery.models.updateMetadata",
+      "bigquery.models.export",
+      "bigquery.routines.get",
+      "bigquery.routines.list",
+      "bigquery.tables.export",
+      "bigquery.tables.get",
+      "bigquery.tables.getData",
+      "bigquery.tables.list",
+      "bigquery.tables.updateData"
+    ],
+    "Error": ""
+  }
 }
