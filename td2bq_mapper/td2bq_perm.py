@@ -42,7 +42,7 @@ class Td2BqPerm:
     to BigQuery.
     """
 
-    def  __init__(self, td_acl_file, users=None, roles=None) -> None:
+    def __init__(self, td_acl_file, users=None, roles=None) -> None:
         """Td2BqPerms instantiates and stores td2bq permissions.
 
         Args:
@@ -462,7 +462,6 @@ class Td2BqPerm:
         group_to_td_role_to_renamed_group = dict()
         claimed_roles = set()  # roles that have been checked and is a duplicate
         group_count = 1
-
 
         # finds the duplicate TD roles and assigns to incremented group name
         for td_role, data_to_arc in self.td_role_to_data_to_arc.items():
