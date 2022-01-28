@@ -14,6 +14,7 @@
 
 import logging
 import os
+
 from td2bq_mapper import td2bq_util
 
 # Terraform file name for IAM user groups
