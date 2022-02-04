@@ -1,3 +1,3 @@
 RoleName,UserName,GroupName,AccessRight,DataName,ErrorDescription
-data_loader,,,"['I', 'R']",[{'db2'}],"{'I': 'BigQeury can grant (R,I,U,D) or no data modification is allowed'}"
+data_loader,,,"['I', 'R']",[{'db2'}],"{'I': 'BigQuery can grant (R,I,U,D) or no data modification is allowed'}"
 data_backup,,,['RS'],[{'db2'}],{'RS': 'backup/restore policy'}

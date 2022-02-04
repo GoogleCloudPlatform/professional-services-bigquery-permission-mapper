@@ -28,7 +28,7 @@ This project uses [Black](https://pypi.org/project/black/) for code formatting a
 
 Please run the following from the root directory before submitting a PR:
 * Remove unused imports: `python3 -m autoflake -r --in-place --remove-all-unused-imports .`
-* Sort imports: `isort -rc .`
+* Sort imports: `isort --profile=black .`
 * Format using Black: `black .`
 * Lint using Flake8: `flake8 .`
 
