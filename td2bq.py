@@ -286,7 +286,7 @@ def validate_acl(td_acl_file, parent_change_folder) -> dict:
 def create_change_files(td_acl_file: str, change_folder: str, overwrite: bool):
     """Validate TD permissions and output change files.
 
-    Validate if all TD permissions can be transalted to BQ IAM.
+    Validate if all TD permissions can be translated to BQ IAM.
     It outputs change files, i.e files with TD entities and corresponding
     GCP entities. The user should modify change files to let the ACL mapper know
     what TD entities to map to GCP when generating JSON or Terraform.
@@ -296,16 +296,16 @@ def create_change_files(td_acl_file: str, change_folder: str, overwrite: bool):
       change_folder(str): directory to create change files
       overwrite(bool): If True the Mapper will overwrite the output dirs and files
     """
-    # check if we can overwrite the already esicting files
+    # check if we can overwrite the existing files
     if not td2bq_util.make_dirs(
         change_folder,
         overwrite,
         {
-            td2bq_perm.CHANGE_FILE_GROUP,
-            td2bq_perm.CHANGE_FILE_OBJECT,
-            td2bq_perm.CHANGE_FILE_DATASET,
-            td2bq_perm.CHANGE_FILE_USER,
-            INVALID_ACLS_FILE,
+            os.path.join(change_folder, td2bq_perm.CHANGE_FILE_GROUP),
+            os.path.join(change_folder, td2bq_perm.CHANGE_FILE_OBJECT),
+            os.path.join(change_folder, td2bq_perm.CHANGE_FILE_DATASET),
+            os.path.join(change_folder, td2bq_perm.CHANGE_FILE_USER),
+            os.path.join(change_folder, INVALID_ACLS_FILE),
         },
     ):
         raise ValueError(f"Could not create the output directory {change_folder}")
