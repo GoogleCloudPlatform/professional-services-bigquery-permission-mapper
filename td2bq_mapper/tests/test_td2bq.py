@@ -221,8 +221,8 @@ def test_generate_jsons_test8():
     Returns:
       None
     """
-    generate_jsons("test8")
+    generate_jsons("test6")
 
 
 if __name__ == "__main__":
-    test_generate_jsons_test8()
+    test_generate_jsons_test7()
