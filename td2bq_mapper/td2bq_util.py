@@ -137,7 +137,7 @@ def make_dirs(path: str, overwrite: bool, files=None) -> bool:
         )
         if old_files:
             logger.error(
-                "Directory %s contains outputs from the previouse "
+                "Directory %s contains outputs from the previous "
                 "ACL Mapper run. Remove files %s and rerun the mapper.",
                 abs_path,
                 old_files,
