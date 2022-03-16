@@ -172,13 +172,7 @@ class Td2BqJson:
           bool: True on success. False on failure
         """
         files_created = []  # track what files were created during this run
-        new_dataset_binding = {
-            "access": [  # template for dataset binding
-                {"role": "WRITER", "specialGroup": "projectWriters"},
-                {"role": "OWNER", "specialGroup": "projectOwners"},
-                {"role": "READER", "specialGroup": "projectReaders"},
-            ]
-        }
+        new_dataset_binding = {"access": []}  # template for dataset binding
         result = True
         for iam, dupe_roles in dedupe_mapping.items():
             for role in dupe_roles:

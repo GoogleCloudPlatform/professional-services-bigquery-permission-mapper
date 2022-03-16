@@ -244,7 +244,7 @@ def validate_acl(td_acl_file, parent_change_folder) -> dict:
             f"in temp directory ({file})"
         )
 
-    logger.info("Temporary change files were mapped to BibQuery.")
+    logger.info("Temporary change files were mapped to BigQuery.")
     # Persist reported n/a errors in a separate file and
     # use them to generate change files:
     old_file = os.path.join(change_folder, td2bq_mod3_map.INVALID_ACLS_FILE)
