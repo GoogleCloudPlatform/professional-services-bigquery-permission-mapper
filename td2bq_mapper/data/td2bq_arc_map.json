@@ -33,7 +33,7 @@
     "bq_permissions": [
       "n/a"
     ],
-    "Error": "Admin level permissions. Outside permission scope of BigQuery users"
+    "Error": "This is an admin level permission which is outside permission scope of BigQuery users"
   },
   "CD": {
     "description": "Create Database",
@@ -75,7 +75,7 @@
     "bq_permissions": [
       "n/a"
     ],
-    "Error": "Admin level permissions. Outside permission scope of BigQuery users"
+    "Error": "This is an admin level permission which is outside permission scope of BigQuery users"
   },
   "CP": {
     "description": "Checkpoint",
@@ -89,7 +89,7 @@
     "bq_permissions": [
       "n/a"
     ],
-    "Error": "Admin level permissions. Outside permission scope of BigQuery users"
+    "Error": "This is an admin level permission which is outside permission scope of BigQuery users"
   },
   "CT": {
     "description": "Create Table",
@@ -106,7 +106,7 @@
     "bq_permissions": [
       "n/a"
     ],
-    "Error": "Admin level permissions. Outside permission scope of BigQuery users"
+    "Error": "This is an admin level permission which is outside permission scope of BigQuery users"
   },
   "CV": {
     "description": "Create View",
@@ -123,14 +123,14 @@
     "bq_permissions": [
       "n/a"
     ],
-    "Error": "BigQuery can grant (R,I,U,D) or no data modification is allowed"
+    "Error": "BigQuery only grants Read, Insert, Update, Delete (R,I,U,D) together and cannot grant Delete by itself"
   },
   "DA": {
     "description": "Drop Authorization",
     "bq_permissions": [
       "n/a"
     ],
-    "Error": "Admin level permissions. Outside permission scope of BigQuery users"
+    "Error": "This is an admin level permission which is outside permission scope of BigQuery users"
   },
   "DD": {
     "description": "Drop Database",
@@ -165,21 +165,21 @@
     "bq_permissions": [
       "n/a"
     ],
-    "Error": "Admin level permissions. Outside permission scope of BigQuery users"
+    "Error": "This is an admin level permission which is outside permission scope of BigQuery users"
   },
   "DP": {
     "description": "Dump",
     "bq_permissions": [
       "n/a"
     ],
-    "Error": "backup/restore policy"
+    "Error": "BigQuery does not manage database backup/restore policies"
   },
   "DR": {
     "description": "Drop Role",
     "bq_permissions": [
       "n/a"
     ],
-    "Error": "Admin level permissions. Outside permission scope of BigQuery users"
+    "Error": "This is an admin level permission which is outside permission scope of BigQuery users"
   },
   "DT": {
     "description": "Drop Table",
@@ -193,7 +193,7 @@
     "bq_permissions": [
       "n/a"
     ],
-    "Error": "Admin level permissions. Outside permission scope of BigQuery users"
+    "Error": "This is an admin level permission which is outside permission scope of BigQuery users"
   },
   "DV": {
     "description": "Drop View",
@@ -207,14 +207,14 @@
     "bq_permissions": [
       "n/a"
     ],
-    "Error": "Users have ECECUTE by default. Adding Execute-like permissions in v.2"
+    "Error": "Users have EXECUTE by default. Adding Execute-like permissions in v.2"
   },
   "EF": {
     "description": "Execute Function",
     "bq_permissions": [
       "n/a"
     ],
-    "Error": "Users have ECECUTE by default. Adding Execute-like permissions in v.2"
+    "Error": "Users have EXECUTE by default. Adding Execute-like permissions in v.2"
   },
   "GC": {
     "description": "Create GLOP SET",
@@ -242,7 +242,7 @@
     "bq_permissions": [
       "n/a"
     ],
-    "Error": "BigQuery can grant (R,I,U,D) or no data modification is allowed"
+    "Error": "BigQuery only grants Read, Insert, Update, Delete (R,I,U,D) together and cannot grant Insert by itself"
   },
   "IX": {
     "description": "Indexes",
@@ -256,7 +256,7 @@
     "bq_permissions": [
       "n/a"
     ],
-    "Error": "Admin level permissions. Outside permission scope of BigQuery users"
+    "Error": "This is an admin level permission which is outside permission scope of BigQuery users"
   },
   "MS": {
     "description": "Monitor Session",
@@ -277,21 +277,21 @@
     "bq_permissions": [
       "n/a"
     ],
-    "Error": "Row level security. Adding support in v.2"
+    "Error": "This is part of row level security. Adding support in v.2"
   },
   "OD": {
     "description": "Override Delete Constraint",
     "bq_permissions": [
       "n/a"
     ],
-    "Error": "Row level security. Adding support in v.2"
+    "Error": "This is part of row level security. Adding support in v.2"
   },
   "OI": {
     "description": "Override Insert Constraint",
     "bq_permissions": [
       "n/a"
     ],
-    "Error": "Row level security. Adding support in v.2"
+    "Error": "This is part of row level security. Adding support in v.2"
   },
   "OP": {
     "description": "Create Owner Procedure",
@@ -305,21 +305,21 @@
     "bq_permissions": [
       "n/a"
     ],
-    "Error": "Row level security. Adding support in v.2"
+    "Error": "This is part of row level security. Adding support in v.2"
   },
   "OS": {
     "description": "Override Select Constraint",
     "bq_permissions": [
       "n/a"
     ],
-    "Error": "Row level security. Adding support in v.2"
+    "Error": "This is part of row level security. Adding support in v.2"
   },
   "OU": {
     "description": "Override Update Constraint",
     "bq_permissions": [
       "n/a"
     ],
-    "Error": "Row level security. Adding support in v.2"
+    "Error": "This is part of row level security. Adding support in v.2"
   },
   "PC": {
     "description": "Create Procedure",
@@ -340,7 +340,7 @@
     "bq_permissions": [
       "n/a"
     ],
-    "Error": "Users have ECECUTE by default"
+    "Error": "Users have EXECUTE by default. Adding Execute-like permissions in v.2"
   },
   "R": {
     "description": "Retrieve or Select",
@@ -370,7 +370,7 @@
     "bq_permissions": [
       "n/a"
     ],
-    "Error": "backup/restore policy"
+    "Error": "BigQuery does not manage database backup/restore policies"
   },
   "SH": {
     "description": "Show",
@@ -406,14 +406,14 @@
     "bq_permissions": [
       "n/a"
     ],
-    "Error": "Admin. Manage resources"
+    "Error": "BigQuery does not have system and session-level performance permissions"
   },
   "SR": {
     "description": "Set Resource Rate",
     "bq_permissions": [
       "n/a"
     ],
-    "Error": "Admin. Manage resources"
+    "Error": "BigQuery does not have system and session-level performance permissions"
   },
   "ST": {
     "description": "Statistics",
@@ -434,7 +434,7 @@
     "bq_permissions": [
       "n/a"
     ],
-    "Error": "BigQuery can grant (R,I,U,D) or no data modification is allowed"
+    "Error": "BigQuery only grants Read, Insert, Update, Delete (R,I,U,D) together and cannot grant Update by itself"
   },
   "UM": {
     "description": "UDT Method",
