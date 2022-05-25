@@ -1,0 +1,11 @@
+BQ Role,IAM,ARC,Groups,BQ users in the group,Data for BQ users in group,BQ users not in the group,Data for BQ users not in group
+td2bq_mapper_bqcustom1,"bigquery.models.export
+bigquery.models.getMetadata
+bigquery.routines.get
+bigquery.tables.export
+bigquery.models.getData
+bigquery.tables.list
+bigquery.routines.list
+bigquery.tables.get
+bigquery.models.list
+bigquery.tables.getData",R,data_reader@epishova.joonix.net,user3@epishova.joonix.net,"db1.t1,db2,db3_renamed,db1.t2_renamed,db4_renamed.t1,db4_renamed.t2_renamed",,

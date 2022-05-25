@@ -476,13 +476,13 @@ class Td2BqPerm:
                                         if data_to_arc[data] != data_to_arc_2[data]:
                                             break
                                     group_to_td_role_to_renamed_group[
-                                        "group" + str(group_count) + "@{%domain.com%}"
+                                        "group" + str(group_count)
                                     ] = dict()
                                     group_to_td_role_to_renamed_group[
-                                        "group" + str(group_count) + "@{%domain.com%}"
+                                        "group" + str(group_count)
                                     ][td_role] = ""
                                     group_to_td_role_to_renamed_group[
-                                        "group" + str(group_count) + "@{%domain.com%}"
+                                        "group" + str(group_count)
                                     ][td_role_2] = ""
                                     claimed_roles.add(
                                         td_role_2
@@ -496,12 +496,10 @@ class Td2BqPerm:
         # each role is assigned to own group
         for td_role in self.td_role_to_data_to_arc.keys():
             if td_role not in claimed_roles:
-                group_to_td_role_to_renamed_group[
-                    "group" + str(group_count) + "@{%domain.com%}"
-                ] = dict()
-                group_to_td_role_to_renamed_group[
-                    "group" + str(group_count) + "@{%domain.com%}"
-                ][td_role] = ""
+                group_to_td_role_to_renamed_group["group" + str(group_count)] = dict()
+                group_to_td_role_to_renamed_group["group" + str(group_count)][
+                    td_role
+                ] = ""
                 claimed_roles.add(td_role)  # role marked as claimed (it's own group)
                 group_count += 1
 

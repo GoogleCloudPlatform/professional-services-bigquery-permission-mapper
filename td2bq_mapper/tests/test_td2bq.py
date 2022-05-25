@@ -18,7 +18,6 @@ import csv
 import json
 import os
 import shutil
-from distutils import dir_util
 
 import td2bq
 from td2bq_mapper import td2bq_util
@@ -141,7 +140,7 @@ def generate_jsons(test_case: str):
         shutil.rmtree(change_folder)
     except FileNotFoundError:
         pass
-    dir_util.copy_tree(source_dir, change_folder)
+    shutil.copytree(source_dir, change_folder)
 
     # command line arguments to generate JSON:
     overwrite = False
@@ -154,7 +153,6 @@ def generate_jsons(test_case: str):
 
     targets = walk_dirs(target_dir)
     results = walk_dirs(change_folder)
-    # assert that all files were generated
     for key in targets:
         try:
             assert key in results
@@ -226,3 +224,5 @@ def test_generate_jsons_test8():
 
 if __name__ == "__main__":
     test_generate_jsons_test8()
+    test_generate_jsons_test7()
+    test_generate_jsons_test6()
