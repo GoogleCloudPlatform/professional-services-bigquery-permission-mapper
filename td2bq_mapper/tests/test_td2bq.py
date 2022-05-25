@@ -141,7 +141,7 @@ def generate_jsons(test_case: str):
         shutil.rmtree(change_folder)
     except FileNotFoundError:
         pass
-    dir_util.copy_tree(source_dir, change_folder)
+    shutil.copytree(source_dir, change_folder)
 
     # command line arguments to generate JSON:
     overwrite = False
@@ -154,18 +154,12 @@ def generate_jsons(test_case: str):
 
     targets = walk_dirs(target_dir)
     results = walk_dirs(change_folder)
-    print ("Length :",len(targets)) 
-    print("result",results)
-    print("target",targets)
-    # assert that all files were generated
     for key in targets:
-        print("key is "+key)
         try:
             assert key in results
             assert targets[key]["dirs"] == results[key]["dirs"]
             assert targets[key]["files"] == results[key]["files"]
             # assert the content of each file
-            print("asert : ", target_dir + key, change_folder + key, targets[key]["files"])
             assert (
                 assert_file_content(
                     target_dir + key, change_folder + key, targets[key]["files"]
@@ -230,6 +224,6 @@ def test_generate_jsons_test8():
 
 
 if __name__ == "__main__":
-    #test_generate_jsons_test8()
-    #test_generate_jsons_test7()
+    test_generate_jsons_test8()
+    test_generate_jsons_test7()
     test_generate_jsons_test6()
