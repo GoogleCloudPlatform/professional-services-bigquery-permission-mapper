@@ -18,7 +18,6 @@ import csv
 import json
 import os
 import shutil
-from distutils import dir_util
 
 import td2bq
 from td2bq_mapper import td2bq_util
