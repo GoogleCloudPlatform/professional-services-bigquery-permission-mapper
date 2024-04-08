@@ -20,12 +20,6 @@ import os
 
 import pandas as pd
 
-# from .td2bq_util import get_root_dir  # for when running file directly
-# from lift_and_shift_mapper import consts
-
-# import td2bq_mapper.td2bq_util as td2bq_util
-# from td2bq_mapper.lift_and_shift_mapper import consts
-
 try:
     import td2bq_util as td2bq_util
     from lift_and_shift_mapper import consts
@@ -129,9 +123,9 @@ def generate_mapping():
             "Input CSV contains null fields where values are expected. Please check that all columns are populated."
         )
 
-    logger.info("Reading and validating provided ARC map...")
     # Read the map file defining TD ARCs to GCP IAM roles
     # Unlike the standard mapper's ARC json, this maps to an IAM role directly rather than to granular permissions.
+    logger.info("Reading and validating provided ARC map...")
     map_file_path = os.path.join(
         td2bq_util.get_root_dir(),
         f"./lift_and_shift_mapper/data/{consts.PREDEFINED_ARC_MAP_JSON}",
@@ -145,8 +139,8 @@ def generate_mapping():
             f"The following access rights present in the input CSV do not have a mapping defined in the arc_map.json. Please update the arc_map:\n{missing_rights}"
         )
 
-    logger.info("Populating IAM roles...")
     # Populate a new column with the proposed roles
+    logger.info("Populating IAM roles...")
     mapping_df[consts.IAM_ROLE] = mapping_df[consts.TD_ACCESS_RIGHT].apply(
         lambda arc: arc_map[arc]["iam_role"]
     )
