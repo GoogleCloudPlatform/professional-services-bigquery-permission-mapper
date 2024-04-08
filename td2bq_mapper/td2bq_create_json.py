@@ -152,7 +152,7 @@ class Td2BqJson:
                 file.seek(0)  # Sets file's current position at offset.
                 json.dump(file_data, file, indent=4)  # convert back to json.
         except Exception:
-            logger.exception("Error, could not upend to JSON file: %s", filename)
+            logger.exception("Error, could not append to JSON file: %s", filename)
             return False
         return True
 
