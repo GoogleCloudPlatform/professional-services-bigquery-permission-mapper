@@ -53,7 +53,7 @@ def read_json_file(file_name: str) -> dict:
     try:
         fd = open(file_name, "r")
         mapfile = json.load(fd)
-        logger.info("Loaded json file: ", file_name)
+        logger.info(f"Loaded json file: {file_name}")
         fd.close()
     except Exception:
         logger.exception("Error, could not load file: %s", file_name)
@@ -102,7 +102,7 @@ def write_dict_file(file_name: str, indata: dict) -> bool:
 
 
 def read_dict_file(file_name: str) -> dict:
-    """Read pickel file into python dictionary and error check.
+    """Read pickle file into python dictionary and error check.
 
     Args:
       file_name (string): file name where to read file from.

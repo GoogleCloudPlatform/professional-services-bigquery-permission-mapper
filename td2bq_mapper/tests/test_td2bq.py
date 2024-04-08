@@ -106,7 +106,7 @@ def walk_dirs(target_dir: str) -> dict:
     """lists files and dirs in the given directory.
 
     Args:
-      tqrget_dir: folder name to go through
+      target_dir: folder name to go through
 
     Returns:
       dict: contains files and directories in the given folder
@@ -115,7 +115,7 @@ def walk_dirs(target_dir: str) -> dict:
     targets = {}
     for path, dirs, files in os.walk(target_dir):
         key = path[strip:]
-        # use slice assignment to skip the recurcive traversal of .dir
+        # use slice assignment to skip the recursive traversal of .dir
         dirs[:] = [d for d in dirs if not d[0] == "."]
         targets[key] = {
             "dirs": set(dirs),
@@ -197,7 +197,7 @@ def test_generate_jsons_test7():
     Tests:
       invalid permissions: {RS}, {I, R}
       valid permissions: {R}
-      Renaming ivalid and valid TD roles to a single BQ role
+      Renaming invalid and valid TD roles to a single BQ role
 
     Args: None
 

@@ -124,7 +124,7 @@ def get_arc_permission_map(
 
 
 def load_perm_from_db(users: str, roles: str, config: str):
-    """Exporot Teradata permissions from the database.
+    """Export Teradata permissions from the database.
 
     Args:
       users: list of users to export from the database
@@ -151,7 +151,7 @@ def create_change_files_from_db(
     Args:
       users: list of users to export from the database
       roles: list of roles to export from the database
-      config: cnofig file describing how to connect to the database
+      config: config file describing how to connect to the database
       change_folder: path to output change files
     """
     if config is not None:

@@ -8,3 +8,4 @@ terraform_generated/*.*
 json_generated/*.*
 logs/
 .DS_Store
+.python-version
