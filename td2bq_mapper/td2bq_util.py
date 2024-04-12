@@ -53,7 +53,7 @@ def read_json_file(file_name: str) -> dict:
     try:
         fd = open(file_name, "r")
         mapfile = json.load(fd)
-        logger.info("Loaded json file: ", file_name)
+        logger.info(f"Loaded json file: {file_name}")
         fd.close()
     except Exception:
         logger.exception("Error, could not load file: %s", file_name)

@@ -15,7 +15,7 @@
 """Constant values used by the mapper."""
 
 # File names
-ACCESS_MAP_INPUT_CSV = "access_map_input.csv"
+ACCESS_MAP_INPUT_CSV = "access_map_input_sample.csv"
 PREDEFINED_ARC_MAP_JSON = "predefined_arc_map.json"
 
 
@@ -50,12 +50,16 @@ COLUMNS = [
 # Information audit log strings used in mapping generation
 INHERITED_FROM_DS = "MAPPER:ACCESS_INHERITED_FROM_DATASET"
 DUPLICATE_GRANT = "MAPPER:DUPLICATE_ROLE_ALREADY_GRANTED"
+OVERLAP_GRANT = "MAPPER:OVERLAPPING_HIGHER_GRANT_EXISTS"
 
 # Role priority mapping to determine replacement
+# Modifications made here should be updated in test_phase1.py's TEST_ROLE_HIERARCHY.
 ROLE_HIERARCHY = {
-    "roles/bigquery.dataAdmin": 1,
-    "roles/bigquery.dataEditor": 2,
-    "roles/bigquery.dataViewer": 3,
-    INHERITED_FROM_DS: 0,
-    "NOT_APPLICABLE": 0,
+    "roles/bigquery.dataAdmin": 100,
+    "roles/bigquery.dataEditor": 200,
+    "roles/bigquery.dataViewer": 300,
+    INHERITED_FROM_DS: 999,
+    OVERLAP_GRANT: 999,
+    DUPLICATE_GRANT: 999,
+    "NOT_APPLICABLE": 999,
 }
