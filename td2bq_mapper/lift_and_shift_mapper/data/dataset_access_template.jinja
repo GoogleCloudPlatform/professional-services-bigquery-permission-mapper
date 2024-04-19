@@ -1,0 +1,10 @@
+bq_dataset_access = {
+    {% for user in dataset_access %}
+    user{{ loop.index }} = {
+        project = "{{ user.GCPProjectId }}"
+        dataset_id = "{{ user.BQDatasetName }}"
+        role = "{{ user.IAMRole }}"
+        email = "{{ user.GCPGroupName }}"
+    }{% if not loop.last %}, {% endif %}
+    {% endfor %}
+}
