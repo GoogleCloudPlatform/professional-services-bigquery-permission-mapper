@@ -21,14 +21,19 @@ import os
 import pandas as pd
 
 try:
-    import td2bq_util as td2bq_util
+    import td2bq_util
     from lift_and_shift_mapper import consts
 except ImportError:
     import sys
 
     sys.path.append(sys.path[0] + "/..")
-    import td2bq_util as td2bq_util
-    from lift_and_shift_mapper import consts
+    try:
+        import td2bq_util
+        from lift_and_shift_mapper import consts
+    except ImportError:
+        # for pytest test_phase1.py to find modules
+        import td2bq_mapper.td2bq_util
+        from td2bq_mapper.lift_and_shift_mapper import consts
 
 
 def df_contains_nulls(df: pd.DataFrame) -> bool:
@@ -58,7 +63,7 @@ def dedupe_dataset_iam_inheritance(
                 & (df[consts.BQ_DATASET] == df.loc[i, consts.BQ_DATASET])
                 & (df[consts.BQ_TABLE] != consts.ALL)  # don't overwrite itself
                 & (
-                    is_dataset_iam_as_or_more_permissive(
+                    is_iam_role_as_or_more_permissive(
                         df[consts.IAM_ROLE], df.loc[i, consts.IAM_ROLE], role_hierarchy
                     )
                 )
@@ -67,33 +72,58 @@ def dedupe_dataset_iam_inheritance(
     return df
 
 
-def dedupe_iam_role_grants(df: pd.DataFrame) -> pd.DataFrame:
-    """If two rows in the same binding will grant the same role/permissions, keep one and mark the others as duplicates."""
-    dedupe_table_mask = (
-        df.groupby(
-            [
-                consts.GCP_GROUP,
-                consts.GCP_PROJECT,
-                consts.BQ_DATASET,
-                consts.BQ_TABLE,
-                consts.IAM_ROLE,
-            ]
+def dedupe_overlap_higher_iam_grant(
+    df: pd.DataFrame, role_hierarchy: dict
+) -> pd.DataFrame:
+    """Mark IAM roles that are obsolete due to more permissive ones present. Applies to both tables and datasets."""
+    for i in range(len(df)):
+        mask = (
+            (df[consts.GCP_GROUP] == df.loc[i, consts.GCP_GROUP])
+            & (df[consts.GCP_PROJECT] == df.loc[i, consts.GCP_PROJECT])
+            & (df[consts.BQ_DATASET] == df.loc[i, consts.BQ_DATASET])
+            & (df[consts.BQ_TABLE] == df.loc[i, consts.BQ_TABLE])
+            & (df[consts.IAM_ROLE] != df.loc[i, consts.IAM_ROLE])
+            & (
+                is_iam_role_as_or_more_permissive(
+                    df[consts.IAM_ROLE], df.loc[i, consts.IAM_ROLE], role_hierarchy
+                )
+            )
         )
-        .cumcount()
-        .ne(0)
-    )
-    df.loc[dedupe_table_mask, consts.IAM_ROLE] = consts.DUPLICATE_GRANT
+        df.loc[mask, consts.IAM_ROLE] = consts.OVERLAP_GRANT
     return df
 
 
-def is_dataset_iam_as_or_more_permissive(
+def role_comparison(table_iam_role, dataset_iam_role, role_hierarchy):
+    if table_iam_role.startswith("MAPPER:") or (table_iam_role == "NOT_APPLICABLE"):
+        return False
+    else:
+        return role_hierarchy[table_iam_role] >= role_hierarchy[dataset_iam_role]
+
+
+def is_iam_role_as_or_more_permissive(
     table_iam_role_series: pd.Series, dataset_iam_role: str, role_hierarchy: dict
 ) -> pd.Series:
     """Check whether the dataset-level role is equal to or more permissive than the table-level one."""
     return table_iam_role_series.apply(
-        lambda table_iam_role: role_hierarchy[table_iam_role]
-        >= role_hierarchy[dataset_iam_role]
+        role_comparison, args=(dataset_iam_role, role_hierarchy)
     )
+
+
+def dedupe_identical_iam_role_grants(df: pd.DataFrame) -> pd.DataFrame:
+    """If two rows in the same binding will grant the same role/permissions, keep one and mark the others as duplicates."""
+    dedupe_table_mask = df.groupby(
+        [
+            consts.GCP_GROUP,
+            consts.GCP_PROJECT,
+            consts.BQ_DATASET,
+            consts.BQ_TABLE,
+            consts.IAM_ROLE,
+        ]
+    ).cumcount().ne(0) | (
+        df[consts.IAM_ROLE].apply(lambda iam_role: iam_role.startswith("MAPPER:"))
+    )
+    df.loc[dedupe_table_mask, consts.IAM_ROLE] = consts.DUPLICATE_GRANT
+    return df
 
 
 def generate_mapping():
@@ -112,18 +142,19 @@ def generate_mapping():
     )
     mapping_df = pd.read_csv(mapping_csv_path)
 
-    # Validate that columns are named as expected in the csv.
+    # Validate that columns are named as expected in the CSV.
     if sorted(mapping_df.columns) != sorted(consts.COLUMNS):
         raise ValueError(
             f"Input CSV column names do not match expected names defined in consts.py.\nInput columns:{mapping_df.columns.values}\nExpected columns:{consts.COLUMNS}"
         )
-    # Validate that there aren't any blank fields that are required. Write MISSING_VALUE to those?
+
+    # Validate that there aren't any blank fields that are required.
     if df_contains_nulls(mapping_df):
         raise TypeError(
             "Input CSV contains null fields where values are expected. Please check that all columns are populated."
         )
 
-    # Read the map file defining TD ARCs to GCP IAM roles
+    # Read the map file defining TD ARCs to GCP IAM roles.
     # Unlike the standard mapper's ARC json, this maps to an IAM role directly rather than to granular permissions.
     logger.info("Reading and validating provided ARC map...")
     map_file_path = os.path.join(
@@ -131,6 +162,8 @@ def generate_mapping():
         f"./lift_and_shift_mapper/data/{consts.PREDEFINED_ARC_MAP_JSON}",
     )
     arc_map = td2bq_util.read_json_file(map_file_path)
+    if not arc_map:
+        raise IOError("Error reading ARC Map JSON file, or it may be empty.")
 
     # Validate that all present access rights are addressed in the arc_map.
     missing_rights = missing_arc_mappings(mapping_df, arc_map)
@@ -139,15 +172,21 @@ def generate_mapping():
             f"The following access rights present in the input CSV do not have a mapping defined in the arc_map.json. Please update the arc_map:\n{missing_rights}"
         )
 
-    # Populate a new column with the proposed roles
+    # Populate a new column with the proposed roles.
     logger.info("Populating IAM roles...")
     mapping_df[consts.IAM_ROLE] = mapping_df[consts.TD_ACCESS_RIGHT].apply(
         lambda arc: arc_map[arc]["iam_role"]
     )
 
-    logger.info("Deduplicating IAM roles...")
+    # Deduplicate roles based on provided hierarchy/permissiveness.
+    logger.info("Deduplicating identical IAM roles...")
+    mapping_df = dedupe_identical_iam_role_grants(mapping_df)
+
+    logger.info("Marking IAM roles inherited from dataset-level grants...")
     mapping_df = dedupe_dataset_iam_inheritance(mapping_df, consts.ROLE_HIERARCHY)
-    mapping_df = dedupe_iam_role_grants(mapping_df)
+
+    logger.info("Marking overlapping less permissive IAM roles per table/dataset...")
+    mapping_df = dedupe_overlap_higher_iam_grant(mapping_df, consts.ROLE_HIERARCHY)
 
     # Write to new CSV.
     now = datetime.datetime.now().strftime("%Y-%m-%dT%H.%M.%S")
