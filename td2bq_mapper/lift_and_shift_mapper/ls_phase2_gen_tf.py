@@ -13,40 +13,62 @@
 # limitations under the License.
 import csv
 import argparse
+import logging
 import os
+import sys
 
 from jinja2 import FileSystemLoader, Environment
 
+from td2bq_mapper import td2bq_util
+from td2bq_mapper.lift_and_shift_mapper import consts
 
-def generate_terraform_output(access_list_csv,dataset_access_template_file,table_access_template_file):
 
+def generate_terraform_output():
+    logging.basicConfig(
+        stream=sys.stdout,
+        level=logging.INFO,
+        format="%(asctime)s - %(name)s - %(levelname)s - %(message)s",
+    )
+    logger = logging.getLogger("td2bq_lift_and_shift")
 
     data_path = os.path.join(
-        os.getcwd(),
-        f"data/",
+        td2bq_util.get_root_dir(),
+        "./lift_and_shift_mapper/data/",
     )
-    print(f"data path : {data_path}")
+    phas1_output_map_file_path = os.path.join(
+        td2bq_util.get_root_dir(),
+        f"./lift_and_shift_mapper/data/{consts.ACCESS_MAP_PHASE1_OUTPUT_CSV}",
+    )
+
+    logger.info("Loading the template files...")
     file_loader = FileSystemLoader(searchpath=data_path)  # Assume templates are in the same directory
     env = Environment(loader=file_loader)
-    dataset_access_template = env.get_template(dataset_access_template_file)
-    table_access_template = env.get_template(table_access_template_file)
-
+    dataset_access_template = env.get_template(consts.DATASET_ACCESS_TEMPLATE)
+    table_access_template = env.get_template(consts.TABLE_ACCESS_TEMPLATE)
 
     dataset_access = []
-    table_access =[]
-    with open(data_path+access_list_csv, 'r') as csvfile:
+    table_access = []
+    # Read the input CSV
+    logger.info("Reading the output of Phase1 mapper...")
+    with open(phas1_output_map_file_path, 'r') as csvfile:
         reader = csv.DictReader(csvfile)
         for i, row in enumerate(reader):
-            if row['BQTableName'] == 'All':
-                dataset_access.append(row)
-            else:
-                table_access.append(row)
+            # reading only rows that has a bigquery role assigned.This eliminates audit entires.
+            if row['IAMRole'].startswith('role/'):
+                if row['BQTableName'] == 'All':  # Filtering out dataset access rows.
+                    dataset_access.append(row)
+                else:
+                    table_access.append(row)
 
+    logger.info("Rendering the templates with actual values...")
     dataset_access_data = dataset_access_template.render(dataset_access=dataset_access)
     table_access_data = table_access_template.render(table_accesses=table_access)
-
+    # Generating output file path variables.
     dataset_access_output_file = data_path + "dataset_access_locals.tf"
     table_access_output_file = data_path + "table_access_locals.tf"
+
+    # writing the template files to data path.
+    logger.info("creating the output terraform files in the data path...")
     with open(dataset_access_output_file, 'w') as outfile:
         outfile.write(dataset_access_data)
 
@@ -55,9 +77,5 @@ def generate_terraform_output(access_list_csv,dataset_access_template_file,table
 
 
 if __name__ == "__main__":
-    '''parser = argparse.ArgumentParser(description="Generate Terraform output from CSV and template")
-    parser.add_argument("csv_file", help="Path to the CSV input file")
-    parser.add_argument("template_file", help="Path to the Terraform template file")
-    parser.add_argument("output_file", help="Path to the generated Terraform output file")
-    args = parser.parse_args()'''
-    generate_terraform_output('test-fmcc_input-phase1_output.csv','dataset_access_template.jinja','table_access_teamplate.jinja')
+    # calling the Generate terraform function.
+    generate_terraform_output()

@@ -17,6 +17,10 @@
 # File names
 ACCESS_MAP_INPUT_CSV = "access_map_input_sample.csv"
 PREDEFINED_ARC_MAP_JSON = "predefined_arc_map.json"
+DATASET_ACCESS_TEMPLATE = "dataset_access_template.jinja"
+TABLE_ACCESS_TEMPLATE = "table_access_template.jinja"
+ACCESS_MAP_PHASE1_OUTPUT_CSV ="phase1_out_{now}.csv"
+
 
 
 # Define input sheet column names - Teradata
