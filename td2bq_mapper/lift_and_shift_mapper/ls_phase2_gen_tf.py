@@ -12,15 +12,27 @@
 # See the License for the specific language governing permissions and
 # limitations under the License.
 import csv
-import argparse
 import logging
 import os
 import sys
 
 from jinja2 import FileSystemLoader, Environment
 
-from td2bq_mapper import td2bq_util
-from td2bq_mapper.lift_and_shift_mapper import consts
+try:
+    import td2bq_util
+    from lift_and_shift_mapper import consts
+except ImportError:
+    import sys
+
+    sys.path.append(sys.path[0] + "/..")
+    try:
+        import td2bq_util
+        from lift_and_shift_mapper import consts
+    except ImportError:
+        # for pytest test_phase1.py to find modules
+        import td2bq_mapper.td2bq_util
+        from td2bq_mapper.lift_and_shift_mapper import consts
+
 
 
 def generate_terraform_output():
@@ -33,11 +45,10 @@ def generate_terraform_output():
 
     data_path = os.path.join(
         td2bq_util.get_root_dir(),
-        "./lift_and_shift_mapper/data/",
-    )
-    phas1_output_map_file_path = os.path.join(
-        td2bq_util.get_root_dir(),
-        f"./lift_and_shift_mapper/data/{consts.ACCESS_MAP_PHASE1_OUTPUT_CSV}",
+        "lift_and_shift_mapper/data/",
+        )
+    phas1_output_map_file_path = os.path.join(td2bq_util.get_root_dir(),
+                                                     "lift_and_shift_mapper/data/",f"{consts.ACCESS_MAP_PHASE1_OUTPUT_CSV}",
     )
 
     logger.info("Loading the template files...")
@@ -54,7 +65,8 @@ def generate_terraform_output():
         reader = csv.DictReader(csvfile)
         for i, row in enumerate(reader):
             # reading only rows that has a bigquery role assigned.This eliminates audit entires.
-            if row['IAMRole'].startswith('role/'):
+
+            if row['IAMRole'].startswith('roles/'):
                 if row['BQTableName'] == 'All':  # Filtering out dataset access rows.
                     dataset_access.append(row)
                 else:
