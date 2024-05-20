@@ -19,8 +19,7 @@ ACCESS_MAP_INPUT_CSV = "access_map_input_sample.csv"
 PREDEFINED_ARC_MAP_JSON = "predefined_arc_map.json"
 DATASET_ACCESS_TEMPLATE = "dataset_access_template.jinja"
 TABLE_ACCESS_TEMPLATE = "table_access_template.jinja"
-ACCESS_MAP_PHASE1_OUTPUT_CSV ="phase1_out_{now}.csv"
-
+ACCESS_MAP_PHASE1_OUTPUT_CSV = "phase1_out_{now}.csv"
 
 
 # Define input sheet column names - Teradata
@@ -36,6 +35,8 @@ GCP_PROJECT = "GCPProjectId"
 BQ_DATASET = "BQDatasetName"
 BQ_TABLE = "BQTableName"
 IAM_ROLE = "IAMRole"
+# User, SA, or group - used in Phase2 if needed for Terraform:
+IDENTITY_TYPE = "IdentityType"
 
 ALL = "All"  # Identifier for dataset-level access
 
@@ -49,6 +50,7 @@ COLUMNS = [
     BQ_DATASET,
     BQ_TABLE,
     IAM_ROLE,
+    IDENTITY_TYPE,
 ]
 
 # Information audit log strings used in mapping generation

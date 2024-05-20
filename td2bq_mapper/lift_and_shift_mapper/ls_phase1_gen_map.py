@@ -142,8 +142,8 @@ def generate_mapping():
     )
     mapping_df = pd.read_csv(mapping_csv_path)
 
-    # Validate that columns are named as expected in the CSV.
-    if sorted(mapping_df.columns) != sorted(consts.COLUMNS):
+    # Validate that required columns are present and named as expected in the CSV.
+    if set(consts.COLUMNS).issubset(mapping_df.columns):
         raise ValueError(
             f"Input CSV column names do not match expected names defined in consts.py.\nInput columns:{mapping_df.columns.values}\nExpected columns:{consts.COLUMNS}"
         )
