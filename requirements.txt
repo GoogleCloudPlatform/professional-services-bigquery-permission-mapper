@@ -1,6 +1,6 @@
 # core dependencies
 pandas==1.4.1
-requests==2.27.1
+requests==2.32.0
 teradatasql==17.10.0.6
 validate-email==1.3
 
