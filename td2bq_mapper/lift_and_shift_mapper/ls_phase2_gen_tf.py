@@ -61,6 +61,7 @@ def generate_terraform_output():
     table_access = []
     # Read the input CSV
     logger.info("Reading the output of Phase1 mapper...")
+    datasets = {}
     with open(phas1_output_map_file_path, 'r') as csvfile:
         reader = csv.DictReader(csvfile)
         for i, row in enumerate(reader):
@@ -68,12 +69,16 @@ def generate_terraform_output():
 
             if row['IAMRole'].startswith('roles/'):
                 if row['BQTableName'] == 'All':  # Filtering out dataset access rows.
-                    dataset_access.append(row)
+                    if row['BQDatasetName'] not in datasets.keys():
+                        users=[row]
+                        datasets[row['BQDatasetName']]={'BQDatasetName':row['BQDatasetName'],'users':users}
+                    else:
+                        datasets[row['BQDatasetName']]['users'].append(row)
                 else:
                     table_access.append(row)
 
     logger.info("Rendering the templates with actual values...")
-    dataset_access_data = dataset_access_template.render(dataset_access=dataset_access)
+    dataset_access_data = dataset_access_template.render(dataset_access=list(datasets.values()))
     table_access_data = table_access_template.render(table_accesses=table_access)
     # Generating output file path variables.
     dataset_access_output_file = data_path + "dataset_access_locals.tf"
