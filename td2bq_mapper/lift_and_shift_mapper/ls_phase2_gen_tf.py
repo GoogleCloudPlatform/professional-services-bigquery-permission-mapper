@@ -6,6 +6,8 @@
 
 #     https://www.apache.org/licenses/LICENSE-2.0
 
+import argparse
+
 # Unless required by applicable law or agreed to in writing, software
 # distributed under the License is distributed on an "AS IS" BASIS,
 # WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
@@ -16,7 +18,7 @@ import logging
 import os
 import sys
 
-from jinja2 import FileSystemLoader, Environment
+from jinja2 import Environment, FileSystemLoader
 
 try:
     import td2bq_util
@@ -34,8 +36,9 @@ except ImportError:
         from td2bq_mapper.lift_and_shift_mapper import consts
 
 
-
-def generate_terraform_output():
+def generate_terraform_output(
+    phase1_csv=None, dataset_access_template=None, table_access_template=None
+):
     logging.basicConfig(
         stream=sys.stdout,
         level=logging.INFO,
@@ -43,42 +46,52 @@ def generate_terraform_output():
     )
     logger = logging.getLogger("td2bq_lift_and_shift")
 
+    if phase1_csv is None:
+        phase1_csv = os.path.join(
+            td2bq_util.get_root_dir(),
+            "lift_and_shift_mapper/data/",
+            f"{consts.ACCESS_MAP_PHASE1_OUTPUT_CSV}",
+        )
+
+    logger.info("Loading the template files...")
     data_path = os.path.join(
         td2bq_util.get_root_dir(),
         "lift_and_shift_mapper/data/",
-        )
-    phas1_output_map_file_path = os.path.join(td2bq_util.get_root_dir(),
-                                                     "lift_and_shift_mapper/data/",f"{consts.ACCESS_MAP_PHASE1_OUTPUT_CSV}",
     )
-
-    logger.info("Loading the template files...")
-    file_loader = FileSystemLoader(searchpath=data_path)  # Assume templates are in the same directory
+    file_loader = FileSystemLoader(
+        searchpath=data_path
+    )  # Assume templates are in the same directory
     env = Environment(loader=file_loader)
-    dataset_access_template = env.get_template(consts.DATASET_ACCESS_TEMPLATE)
-    table_access_template = env.get_template(consts.TABLE_ACCESS_TEMPLATE)
+    if dataset_access_template is None:
+        dataset_access_template = env.get_template(consts.DATASET_ACCESS_TEMPLATE)
+    if table_access_template is None:
+        table_access_template = env.get_template(consts.TABLE_ACCESS_TEMPLATE)
 
-    dataset_access = []
     table_access = []
     # Read the input CSV
     logger.info("Reading the output of Phase1 mapper...")
     datasets = {}
-    with open(phas1_output_map_file_path, 'r') as csvfile:
-        reader = csv.DictReader(csvfile)
+    with open(phase1_csv, "r") as csv_file:
+        reader = csv.DictReader(csv_file)
         for i, row in enumerate(reader):
-            # reading only rows that has a bigquery role assigned.This eliminates audit entires.
-
-            if row['IAMRole'].startswith('roles/'):
-                if row['BQTableName'] == 'All':  # Filtering out dataset access rows.
-                    if row['BQDatasetName'] not in datasets.keys():
-                        users=[row]
-                        datasets[row['BQDatasetName']]={'BQDatasetName':row['BQDatasetName'],'users':users}
+            # Reading only rows that has a bigquery role assigned.This eliminates audit entries.
+            if row["IAMRole"].startswith("roles/"):
+                if row["BQTableName"] == "All":  # Filtering out dataset access rows.
+                    if row["BQDatasetName"] not in datasets.keys():
+                        users = [row]
+                        datasets[row["BQDatasetName"]] = {
+                            "BQDatasetName": row["BQDatasetName"],
+                            "users": users,
+                        }
                     else:
-                        datasets[row['BQDatasetName']]['users'].append(row)
+                        datasets[row["BQDatasetName"]]["users"].append(row)
                 else:
                     table_access.append(row)
 
     logger.info("Rendering the templates with actual values...")
-    dataset_access_data = dataset_access_template.render(dataset_access=list(datasets.values()))
+    dataset_access_data = dataset_access_template.render(
+        dataset_access=list(datasets.values())
+    )
     table_access_data = table_access_template.render(table_accesses=table_access)
     # Generating output file path variables.
     dataset_access_output_file = data_path + "dataset_access_locals.tf"
@@ -86,13 +99,29 @@ def generate_terraform_output():
 
     # writing the template files to data path.
     logger.info("creating the output terraform files in the data path...")
-    with open(dataset_access_output_file, 'w') as outfile:
+    with open(dataset_access_output_file, "w") as outfile:
         outfile.write(dataset_access_data)
 
-    with open(table_access_output_file, 'w') as outfile:
+    with open(table_access_output_file, "w") as outfile:
         outfile.write(table_access_data)
 
 
 if __name__ == "__main__":
-    # calling the Generate terraform function.
-    generate_terraform_output()
+    parser = argparse.ArgumentParser(
+        description="Generate Terraform output from CSV and template"
+    )
+    parser.add_argument(
+        "--phase1_csv",
+        help="Path to the CSV Phase1 output file to be used to generate Terraform",
+    )
+    parser.add_argument(
+        "--dataset_template", help="Path to the Terraform template file"
+    )
+    parser.add_argument("--table_template", help="Path to the Terraform template file")
+    args = parser.parse_args()
+
+    generate_terraform_output(
+        phase1_csv=args.phase1_csv,
+        dataset_access_template=args.dataset_template,
+        table_access_template=args.table_template,
+    )

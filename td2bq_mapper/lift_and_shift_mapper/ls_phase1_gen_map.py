@@ -14,6 +14,7 @@
 
 """Runs Phase 1 of the lift-and-shift mapper to generate and output the planned IAM mapping."""
 
+import argparse
 import datetime
 import logging
 import os
@@ -126,7 +127,7 @@ def dedupe_identical_iam_role_grants(df: pd.DataFrame) -> pd.DataFrame:
     return df
 
 
-def generate_mapping():
+def generate_mapping(mapping_csv_path=None, arc_map_path=None):
     logging.basicConfig(
         stream=sys.stdout,
         level=logging.INFO,
@@ -136,14 +137,15 @@ def generate_mapping():
 
     # Read the input CSV
     logger.info("Reading and validating provided CSV access map input...")
-    mapping_csv_path = os.path.join(
-        td2bq_util.get_root_dir(),
-        f"./lift_and_shift_mapper/data/{consts.ACCESS_MAP_INPUT_CSV}",
-    )
+    if mapping_csv_path is None:
+        mapping_csv_path = os.path.join(
+            td2bq_util.get_root_dir(),
+            f"./lift_and_shift_mapper/data/{consts.ACCESS_MAP_INPUT_CSV}",
+        )
     mapping_df = pd.read_csv(mapping_csv_path)
 
     # Validate that required columns are present and named as expected in the CSV.
-    if set(consts.COLUMNS).issubset(mapping_df.columns):
+    if not set(consts.COLUMNS).issubset(mapping_df.columns):
         raise ValueError(
             f"Input CSV column names do not match expected names defined in consts.py.\nInput columns:{mapping_df.columns.values}\nExpected columns:{consts.COLUMNS}"
         )
@@ -157,11 +159,12 @@ def generate_mapping():
     # Read the map file defining TD ARCs to GCP IAM roles.
     # Unlike the standard mapper's ARC json, this maps to an IAM role directly rather than to granular permissions.
     logger.info("Reading and validating provided ARC map...")
-    map_file_path = os.path.join(
-        td2bq_util.get_root_dir(),
-        f"./lift_and_shift_mapper/data/{consts.PREDEFINED_ARC_MAP_JSON}",
-    )
-    arc_map = td2bq_util.read_json_file(map_file_path)
+    if arc_map_path is None:
+        arc_map_path = os.path.join(
+            td2bq_util.get_root_dir(),
+            f"./lift_and_shift_mapper/data/{consts.PREDEFINED_ARC_MAP_JSON}",
+        )
+    arc_map = td2bq_util.read_json_file(arc_map_path)
     if not arc_map:
         raise IOError("Error reading ARC Map JSON file, or it may be empty.")
 
@@ -189,10 +192,11 @@ def generate_mapping():
     mapping_df = dedupe_overlap_higher_iam_grant(mapping_df, consts.ROLE_HIERARCHY)
 
     # Write to new CSV.
+    filename_without_ext = os.path.splitext(os.path.basename(mapping_csv_path))[0]
     now = datetime.datetime.now().strftime("%Y-%m-%dT%H.%M.%S")
     output_path = os.path.join(
         os.getcwd(),
-        f"td2bq_mapper/lift_and_shift_mapper/data/phase1_out_{now}.csv",
+        f"td2bq_mapper/lift_and_shift_mapper/data/{filename_without_ext}_phase1_out_{now}.csv",
     )
     logger.info(f"Writing output to {output_path}")
     mapping_df.to_csv(output_path)
@@ -200,4 +204,13 @@ def generate_mapping():
 
 
 if __name__ == "__main__":
-    generate_mapping()
+    parser = argparse.ArgumentParser(
+        description="Generate mapping from Teradata roles to GCP IAM."
+    )
+    parser.add_argument("--input_csv", help="Path to the CSV input file.")
+    parser.add_argument(
+        "--arc_map_json", help="Path to the JSON access right code map file."
+    )
+    args = parser.parse_args()
+
+    generate_mapping(mapping_csv_path=args.input_csv, arc_map_path=args.arc_map_json)
