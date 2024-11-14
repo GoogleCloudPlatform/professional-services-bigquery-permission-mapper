@@ -1,0 +1,16 @@
+ datasets = [
+    {% for project in dataset_access %}
+    {
+      project_id = "{{ project.GCPProjectId }}"
+      dataset_id = "{{ project.BQDatasetName }}"
+      members = [
+        {% for member in project.users %}
+        {
+          role   = "{{ member.IAMRole }}"
+          member = "{{ member.IdentityType if member.IdentityType else 'user' }}:{{ member.GCPGroupName }}"
+        }{% if not loop.last %},{% endif %}
+        {% endfor %}
+      ]
+    }{% if not loop.last %},{% endif %}
+    {% endfor %}
+  ]
