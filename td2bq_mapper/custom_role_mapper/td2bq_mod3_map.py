@@ -23,7 +23,7 @@ import traceback
 
 import validate_email
 
-from td2bq_mapper import td2bq_perm
+from td2bq_mapper.custom_role_mapper import td2bq_perm
 
 # file name to report invalid records in change files provided by the user
 INVALID_REPORTS_FILE = "invalid_reports.csv"

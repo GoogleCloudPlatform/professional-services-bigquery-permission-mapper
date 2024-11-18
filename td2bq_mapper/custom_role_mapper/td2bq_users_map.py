@@ -15,7 +15,7 @@
 import logging
 import os
 
-from td2bq_mapper import td2bq_util
+from td2bq_mapper.custom_role_mapper import td2bq_util
 
 # Terraform file name for IAM user groups
 GROUP_FILE = "iam_groups.tf.json"
@@ -70,7 +70,7 @@ class Td2BqUsersMap:
             True if keys where changed. False otherwise.
         """
         result = False
-        for (k1, v1) in original.items():
+        for k1, v1 in original.items():
             v2 = updated.get(k1)
             k2 = k1
             if v2 is None:

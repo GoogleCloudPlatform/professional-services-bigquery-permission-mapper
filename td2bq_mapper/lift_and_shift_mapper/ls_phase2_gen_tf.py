@@ -21,18 +21,18 @@ import sys
 from jinja2 import Environment, FileSystemLoader
 
 try:
-    import td2bq_util
+    from custom_role_mapper import td2bq_util
     from lift_and_shift_mapper import consts
 except ImportError:
     import sys
 
     sys.path.append(sys.path[0] + "/..")
     try:
-        import td2bq_util
+        from custom_role_mapper import td2bq_util
         from lift_and_shift_mapper import consts
     except ImportError:
         # for pytest test_phase1.py to find modules
-        import td2bq_mapper.td2bq_util
+        import td2bq_mapper.custom_role_mapper.td2bq_util
         from td2bq_mapper.lift_and_shift_mapper import consts
 
 
@@ -59,8 +59,8 @@ def generate_terraform_output(
         "lift_and_shift_mapper/data/",
     )
     terraform_path = os.path.join(
-        td2bq_util.get_root_dir(),
-        "lift_and_shift_mapper/bq_terraform/"                          )
+        td2bq_util.get_root_dir(), "lift_and_shift_mapper/bq_terraform/"
+    )
     file_loader = FileSystemLoader(
         searchpath=data_path
     )  # Assume templates are in the same directory
@@ -71,7 +71,7 @@ def generate_terraform_output(
         table_access_template_name = consts.TABLE_ACCESS_TEMPLATE
 
     dataset_access_template = env.get_template(dataset_access_template_name)
-    table_access_template =  env.get_template(table_access_template_name)
+    table_access_template = env.get_template(table_access_template_name)
 
     table_access = {}
     # Read the input CSV
@@ -86,26 +86,31 @@ def generate_terraform_output(
                     if row["BQDatasetName"] not in datasets.keys():
                         users = [row]
                         datasets[row["BQDatasetName"]] = {
-                            "BQDatasetName": row["BQDatasetName"],"GCPProjectId":row["GCPProjectId"],
+                            "BQDatasetName": row["BQDatasetName"],
+                            "GCPProjectId": row["GCPProjectId"],
                             "users": users,
                         }
                     else:
                         datasets[row["BQDatasetName"]]["users"].append(row)
                 else:
-                     if row["BQDatasetName"] not in table_access.keys():
+                    if row["BQDatasetName"] not in table_access.keys():
                         users = [row]
                         table_access[row["TableName"]] = {
-                            "TableName":row["TableName"],"BQDatasetName": row["BQDatasetName"],"GCPProjectId":row["GCPProjectId"],
+                            "TableName": row["TableName"],
+                            "BQDatasetName": row["BQDatasetName"],
+                            "GCPProjectId": row["GCPProjectId"],
                             "users": users,
                         }
-                     else:
+                    else:
                         table_access[row["TableName"]]["users"].append(row)
 
     logger.info("Rendering the templates with actual values...")
     dataset_access_data = dataset_access_template.render(
         dataset_access=list(datasets.values())
     )
-    table_access_data = table_access_template.render(table_accesses=list(table_access.values()))
+    table_access_data = table_access_template.render(
+        table_accesses=list(table_access.values())
+    )
     # Generating output file path variables.
     dataset_access_output_file = terraform_path + "dataset.tfvars"
     table_access_output_file = terraform_path + "tables.tfvars"
