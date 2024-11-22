@@ -3,7 +3,7 @@ steps:
     name: python:3.9
     entrypoint: pip
     args: ["install", "-r", "requirements.txt", "--user"]
-  
+
   - id: "check formatting"
     name: python:3.9
     entrypoint: python3
@@ -28,10 +28,10 @@ steps:
     args: ["-m", "isort", "--check-only", "--profile=black", "."]
     waitFor: ["install dependencies"]
 
-  - id: "run unit tests"
+  - id: "run v1 unit tests"
     name: python:3.9
     entrypoint: python3
     env:
     - "PYTHONPATH=."
-    args: ["td2bq_mapper/tests/test_td2bq.py"]
+    args: ["td2bq_mapper/custom_role_mapper/tests/test_td2bq.py"]
     waitFor: ["install dependencies"]
