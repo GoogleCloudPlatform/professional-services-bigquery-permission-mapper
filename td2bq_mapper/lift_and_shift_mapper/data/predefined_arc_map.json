@@ -1,0 +1,68 @@
+{
+    "version": 0.1,
+    "SELECT": {
+        "description": "Read data and metadata from the table or view.",
+        "iam_role": "roles/bigquery.dataViewer",
+        "Error": ""
+    },
+    "CREATE TABLE": {
+        "description": "Create, read, update, and delete tables and views",
+        "iam_role": "roles/bigquery.dataEditor",
+        "Error": ""
+    },
+    "CHECKPOINT": {
+        "description": "",
+        "iam_role": "NOT_APPLICABLE",
+        "Error": "No BigQuery equivalent"
+    },
+    "CREATE VIEW": {
+        "description": "Create, read, update, and delete tables and views.",
+        "iam_role": "roles/bigquery.dataEditor",
+        "Error": ""
+    },
+    "DELETE": {
+        "description": "Create, read, update, and delete tables and views.",
+        "iam_role": "roles/bigquery.dataEditor",
+        "Error": "No BigQuery equivalent"
+    },
+    "DROP TABLE": {
+        "description": "Create, read, update, and delete tables and views.",
+        "iam_role": "roles/bigquery.dataEditor",
+        "Error": "No BigQuery equivalent"
+    },
+    "DROP VIEW": {
+        "description": "Create, read, update, and delete tables and views.",
+        "iam_role": "roles/bigquery.dataEditor",
+        "Error": "No BigQuery equivalent"
+    },
+    "EXECUTE": {
+        "description": "N/A",
+        "iam_role": "NOT_APPLICABLE",
+        "Error": "In BigQuery, job creation permissions must be granted at project-level."
+    },
+    "EXECUTE PROCEDURE": {
+        "description": "N/A",
+        "iam_role": "NOT_APPLICABLE",
+        "Error": "In BigQuery, job creation permissions must be granted at project-level."
+    },
+    "INDEX": {
+        "description": "N/A",
+        "iam_role": "NOT_APPLICABLE",
+        "Error": "No BigQuery equivalent"
+    },
+    "INSERT": {
+        "description": "Create, read, update, and delete tables and views.",
+        "iam_role": "roles/bigquery.dataEditor",
+        "Error": "No BigQuery equivalent"
+    },
+    "STATISTICS": {
+        "description": "N/A",
+        "iam_role": "NOT_APPLICABLE",
+        "Error": "No BigQuery equivalent"
+    },
+    "UPDATE": {
+        "description": "Create, read, update, and delete tables and views.",
+        "iam_role": "roles/bigquery.dataEditor",
+        "Error": "No BigQuery equivalent"
+    }
+}

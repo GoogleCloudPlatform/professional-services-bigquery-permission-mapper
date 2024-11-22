@@ -16,7 +16,7 @@ import json
 import logging
 import os
 
-from td2bq_mapper import td2bq_util
+from td2bq_mapper.custom_role_mapper import td2bq_util
 
 logger = logging.getLogger("td2bq")
 

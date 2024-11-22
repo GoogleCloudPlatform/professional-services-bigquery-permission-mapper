@@ -1,5 +1,22 @@
 # Teradata to BigQuery Permission Mapper
-The mapper automatically translates Teradata permissions to BigQuery IAM. The tool translates Teradata roles and ACL to GCP user groups, BigQuery custom roles, and IAM permissions. It outputs a translation CSV report, JSON files for gcloud CLI, and Terraforms to create BigQuery custom roles with corresponding IAM permissions and assign those roles to GCP user groups and BigQuery resources.
+The TD2BQ Permission Mapper translate Teradata permissions to BigQuery IAM. Teradata roles are mapped GCP groups and IAM roles. It outputs Terraform to apply these mappings, along with a a CSV mapping report.
+
+There are two variants of the permission mapper:
+
+### 1. Lift-and-Shift Mapper
+- Use this Mapper version if you want to retain the same Teradata roles in BigQuery, as well as if you prefer to use predefined IAM roles.
+- This version retains all Teradata roles in the GCP translation.
+- Teradata ACLs are mapped to IAM roles according to the user-configurable JSON map.
+- By default, BigQuery predefined roles are provided in the mapping. This can be changed. A hierarchy can also be defined so that groups are not granted less permissive roles if they already have a more permission one (eg. a group would be granted just Data Editor instead of both Data Editor and Data Viewer).
+- The tool will deduplicate role grants where possible. For example, if a group is granted BigQuery Data Viewer on both a schema/dataset, as well as a table within that schema, it will only be granted at the schema-level since it will be inherited.
+- Refer to the [Lift-and-Shift Mapper ReadMe](td2bq_mapper/lift_and_shift_mapper//README.md) for more details.
+
+
+### 2. Custom Role Mapper
+- Use this version if you want to create a fresh set of roles and groups rather than migrating your existing Teradata roles. Also use this if you need GCP custom roles created based on the permissions present in Teradata.
+- The tool translates Teradata roles and ACL to GCP user groups, BigQuery custom roles, and IAM permissions.
+- It outputs a translation CSV report, JSON files for gcloud CLI, and Terraform to create BigQuery custom roles with corresponding IAM permissions and assign those roles to GCP user groups and BigQuery resources.
+- Refer to the below steps for more info on the Custom Role mapper, including detailed user guide.
 
 
 ## Requirements
@@ -20,7 +37,7 @@ The mapper tool is a directory of scripts which relies on the accuracy of input 
 $ python td2bq.py --help
 ```
 
-See the detailed [user guide PDF](docs/bq-permission-mapper-user-guide.pdf) for more information. 
+See the detailed [user guide PDF](docs/bq-permission-mapper-user-guide.pdf) for more information.
 
 ## Disclaimer
 

@@ -20,7 +20,7 @@ import os
 import shutil
 
 import td2bq
-from td2bq_mapper import td2bq_util
+from td2bq_mapper.custom_role_mapper import td2bq_util
 
 rootdir = td2bq_util.get_root_dir()
 testdir = rootdir + "/tests"

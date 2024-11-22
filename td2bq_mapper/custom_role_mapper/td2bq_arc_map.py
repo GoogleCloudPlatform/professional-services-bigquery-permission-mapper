@@ -19,7 +19,7 @@ from typing import Optional
 
 import requests
 
-from .td2bq_util import get_root_dir, read_json_file
+from td2bq_mapper.custom_role_mapper.td2bq_util import get_root_dir, read_json_file
 
 logger = logging.getLogger("td2bq")
 

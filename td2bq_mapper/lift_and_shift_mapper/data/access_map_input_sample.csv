@@ -1,0 +1,3 @@
+Role,DatabaseName,AccessRight,TableName,GCPGroupName,IdentityType,GCPProjectId,BQDatasetName,BQTableName,IAMRole,anotherCol
+My_TD_Role_1,mydb1,SELECT,All,datausers@example.com,group,myproject1,mydataset2,All,,test1
+My_TD_Role_1,mydb1,UPDATE,mytable1,datausers@example.com,group,myproject1,mydataset2,mytable1,,test2

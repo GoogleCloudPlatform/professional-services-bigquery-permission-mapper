@@ -39,7 +39,7 @@ from logging import handlers
 import pandas as pd
 import teradatasql
 
-from td2bq_mapper import (
+from td2bq_mapper.custom_role_mapper import (
     td2bq_arc_map,
     td2bq_create_json,
     td2bq_mod3_map,

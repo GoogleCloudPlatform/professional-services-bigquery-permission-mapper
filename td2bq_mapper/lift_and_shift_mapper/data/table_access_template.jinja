@@ -1,0 +1,15 @@
+module "bq_obj_access" {
+  source = "source"
+
+  accesslist = {
+    {% for access in table_accesses %}
+    access{{ loop.index }} = {
+      project_id = "{{ access.GCPProjectId }}"
+      dataset_id = "{{ access.BQDatasetName }}"
+      table_id = "{{ access.TableName }}"  # table_id line is always included
+      role = "{{ access.IAMRole }}"
+      member = "{{ access.GCPGroupName }}"
+    }{% if not loop.last %}, {% endif %}
+    {% endfor %}
+  }
+}

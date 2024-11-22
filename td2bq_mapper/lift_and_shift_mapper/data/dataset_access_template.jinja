@@ -1,0 +1,26 @@
+{% for dataset in dataset_access %}
+module "grant_processing_{{ loop.index }}" {
+    source = "git@github.ford.com:gcp/tfm-bigquery//modules/authview"
+    project_id = var.gcp_project_id
+    dataset_id = "{{ dataset.BQDatasetName }}"
+
+    roles = [
+        {% for user in dataset.users %}
+        {
+            role = "{{ user.IAMRole }}"
+            {% if user.IdentityType == 'user' %}
+            user_by_email = "{{ user.GCPGroupName }}"
+            {% elif user.IdentityType == 'group' %}
+            group_by_email = "{{ user.GCPGroupName }}"
+            {% elif user.IdentityType == 'serviceAccount' %}
+            user_by_email = "{{ user.GCPGroupName }}"
+            {% endif %}
+        }{% if not loop.last %},
+        {% endif %}
+        {% endfor %}
+    ]
+
+    authorized_views = []
+}
+
+{% endfor %}
