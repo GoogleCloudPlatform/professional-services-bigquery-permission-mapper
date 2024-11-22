@@ -24,15 +24,12 @@ try:
     from custom_role_mapper import td2bq_util
     from lift_and_shift_mapper import consts
 except ImportError:
-    import sys
-
     sys.path.append(sys.path[0] + "/..")
     try:
         from custom_role_mapper import td2bq_util
         from lift_and_shift_mapper import consts
     except ImportError:
         # for pytest test_phase1.py to find modules
-        import td2bq_mapper.custom_role_mapper.td2bq_util
         from td2bq_mapper.lift_and_shift_mapper import consts
 
 
