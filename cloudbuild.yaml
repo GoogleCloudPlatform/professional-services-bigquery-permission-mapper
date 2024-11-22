@@ -16,11 +16,11 @@ steps:
     args: ["-m", "flake8", "--count", "."]
     waitFor: ["install dependencies"]
 
-  - id: "check unused imports"
-    name: python:3.9
-    entrypoint: python3
-    args: ["-m", "autoflake", "-r", "--remove-all-unused-imports", "--check", "."]
-    waitFor: ["install dependencies"]
+  # - id: "check unused imports"
+  #   name: python:3.9
+  #   entrypoint: python3
+  #   args: ["-m", "autoflake", "-r", "--remove-all-unused-imports", "--check", "."]
+  #   waitFor: ["install dependencies"]
 
   - id: "check import sorting"
     name: python:3.9

@@ -6,13 +6,13 @@
 
 #     https://www.apache.org/licenses/LICENSE-2.0
 
-import argparse
-
 # Unless required by applicable law or agreed to in writing, software
 # distributed under the License is distributed on an "AS IS" BASIS,
 # WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
 # See the License for the specific language governing permissions and
 # limitations under the License.
+
+import argparse
 import csv
 import logging
 import os
@@ -30,6 +30,7 @@ except ImportError:
         from lift_and_shift_mapper import consts
     except ImportError:
         # for pytest test_phase1.py to find modules
+        import td2bq_mapper.custom_role_mapper.td2bq_util
         from td2bq_mapper.lift_and_shift_mapper import consts
 
 
