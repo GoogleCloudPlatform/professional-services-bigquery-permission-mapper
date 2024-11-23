@@ -11,7 +11,7 @@ flake8==4.0.1
 isort==5.10.1
 
 # sub dependencies
-certifi==2021.10.8
+certifi==2024.7.4
 charset-normalizer==2.0.10
 click==8.0.3
 idna==3.3
