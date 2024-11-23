@@ -29,4 +29,4 @@ regex==2022.1.18
 six==1.16.0
 tomli==1.2.3
 typing_extensions==4.0.1
-urllib3==1.26.8
+urllib3==1.26.19
